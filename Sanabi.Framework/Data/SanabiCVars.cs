@@ -35,7 +35,7 @@ public static partial class SanabiCVars
     /// <summary>
     ///     Willingly (opt-in) send your (optionally spoofed) HWID to server?
     /// </summary>
-    public static readonly CVarDef<bool> AllowHwid = CVarDef.Create("AllowHwid", false);
+    public static readonly CVarDef<bool> AllowHwid = CVarDef.Create("AllowHwid", true);
 
     /// <summary>
     ///     Should the launcher start on the login menu
