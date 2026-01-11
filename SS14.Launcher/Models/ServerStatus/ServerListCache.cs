@@ -75,7 +75,7 @@ public sealed class ServerListCache : ReactiveObject, IServerSource
 
             // Queue requests: default hub(s)
             foreach (var hubAddress in HubSettingsViewModel.EnabledDefaultHubs)
-                requests.Add((_hubApi.GetServers(UrlFallbackSet.FromSingle(hubAddress), cancel), new Uri(hubAddress, UriKind.Absolute)));
+                requests.Add((_hubApi.GetServers(UrlFallbackSet.FromSingle(hubAddress), cancel), hubAddress));
 
             // Queue requests: custom hubs
             foreach (var hub in _dataManager.Hubs.OrderBy(h => h.Priority))

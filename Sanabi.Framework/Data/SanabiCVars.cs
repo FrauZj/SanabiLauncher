@@ -55,11 +55,11 @@ public static partial class SanabiCVars
 
 
     /// <summary>
-    ///     In hub settings, do we use the hub that the launcher uses
+    ///     In hub settings, do we use the hub(s) that the launcher uses
     ///         as default?
     ///
     ///     This setting exists so that you can willingly enable/disable
-    ///         the default hub and not need to remember it's URL,
+    ///         the default hub(s) and not need to remember it's URL,
     ///         opposed to outright removing the default hub and requiring
     ///         the user to have it manually listed as a hub.
     /// </summary>

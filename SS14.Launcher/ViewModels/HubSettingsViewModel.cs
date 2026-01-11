@@ -18,16 +18,16 @@ public class HubSettingsViewModel : ViewModelBase
 
     public bool EnableStockHub { get; set; }
 
-    private static readonly string[] _defaultHubsStatic = [.. ConfigConstants.MirrorHubUrls.Select(set => set.Urls[0])];
+    private static readonly Uri[] _defaultHubsStatic = ConfigConstants.MirrorHubUrls;
 
     // Binding; do not rename/remove/change signature
-    public static string[] DefaultHubs => _defaultHubsStatic;
+    public static Uri[] DefaultHubs => _defaultHubsStatic;
 
     /// <summary>
     ///     List of default hub addresses, accounting for
     ///         whether hubs are enabled.
     /// </summary>
-    public static string[] EnabledDefaultHubs => _dataManager.GetCVar(SanabiCVars.EnableStockHub) ? _defaultHubsStatic : [];
+    public static Uri[] EnabledDefaultHubs => _dataManager.GetCVar(SanabiCVars.EnableStockHub) ? _defaultHubsStatic : [];
 
     public ObservableCollection<HubViewModel> HubList { get; set; } = new();
 

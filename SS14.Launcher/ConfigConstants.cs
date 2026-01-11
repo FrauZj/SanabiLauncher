@@ -41,7 +41,14 @@ public static class ConfigConstants
     ///     Mirror wizden hub URL(s).
     ///         Includes `https://cdn.spacestationmultiverse.com/wizden-hub-mirror/`.
     /// </summary>
-    public static readonly UrlFallbackSet[] MirrorHubUrls = [new(["https://cdn.spacestationmultiverse.com/wizden-hub-mirror/"])];
+    public static readonly Uri[] MirrorHubUrls =
+    [
+        new("https://hub.simplestation.org/"),
+        new("https://hub.singularity14.co.uk/"),
+        new("https://cdn.spacestationmultiverse.com/hub/"),
+        new("https://hub.spacestation14.com/"),
+    ];
+
     public const string DiscordUrl = "https://discord.ss14.io/";
     public const string AccountBaseUrl = "https://account.spacestation14.com/Identity/Account/";
     public const string AccountManagementUrl = $"{AccountBaseUrl}Manage";

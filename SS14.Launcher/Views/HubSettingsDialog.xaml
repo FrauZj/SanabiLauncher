@@ -113,7 +113,7 @@
         <CheckBox DockPanel.Dock="Right"
                   Margin="4"
                   IsChecked="{Binding EnableStockHub}"
-                  Content="Enable default hub"/>
+                  Content="Enable default hub(s)"/>
         <TextBlock DockPanel.Dock="Left"
                    Text="{loc:Loc hub-settings-heading-custom}"
                    Classes="NanoHeadingSmall"/>
