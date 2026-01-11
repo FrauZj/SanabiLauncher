@@ -10,9 +10,9 @@ namespace Sanabi.Framework.Data;
 public static partial class SanabiAccountCVars
 {
     /// <summary>
-    ///     Seed to be used for generating HWID in <see cref="Game.Patches.HwidPatch"/>.
-    ///         This is an ulong value bit-interpreted as a long. This is done because DataManager SQLite
+    ///     Seed to be used for generating HWID in <see cref="Game.Patches.HwidPatch"/>, and spoofed fingerprint.
+    ///         This is an ulong value bit-interpreted as a long. This is done because SQLite
     ///         is weird with ulong values.
     /// </summary>
-    public static readonly CVarDef<long> SpoofedHwidSeed = CVarDef.Create("SpoofedHwidSeed", 1L);
+    public static readonly CVarDef<long> SpoofingSeed = CVarDef.Create("SpoofingSeed", 1L);
 }

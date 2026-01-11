@@ -27,12 +27,6 @@ public static partial class SanabiCVars
     public static readonly CVarDef<bool> PassSpoofedFingerprint = CVarDef.Create("SpoofFingerprint", false);
 
     /// <summary>
-    ///     Whenever logging in on any account, generates a new spoofed fingerprint to be used if set to pass
-    ///         spoofed fingerprints to servers.
-    /// </summary>
-    public static readonly CVarDef<bool> SpoofFingerprintOnLogin = CVarDef.Create("SpoofFingerprintOnLogin", true);
-
-    /// <summary>
     ///     Willingly (opt-in) send your (optionally spoofed) HWID to server?
     /// </summary>
     public static readonly CVarDef<bool> AllowHwid = CVarDef.Create("AllowHwid", true);
@@ -47,12 +41,6 @@ public static partial class SanabiCVars
     ///         logged in or not.
     /// </summary>
     public static readonly CVarDef<bool> StartOnLoginMenu = CVarDef.Create("StartOnLoginMenu", false);
-
-    /// <summary>
-    ///     Does the launcher start logged in or logged out?
-    /// </summary>
-    public static readonly CVarDef<bool> StartLoggedIn = CVarDef.Create("StartLoggedIn", false);
-
 
     /// <summary>
     ///     In hub settings, do we use the hub(s) that the launcher uses

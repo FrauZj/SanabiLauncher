@@ -52,21 +52,13 @@ public sealed class LoginManager : ReactiveObject
         if (newAccountId != null)
         {
             var lookup = _logins.Lookup(newAccountId.Value);
-            ActiveAccount = lookup.Value;
+            SetActiveAccountFull(newAccountId, lookup.Value);
 
             if (!lookup.HasValue)
                 throw new ArgumentException("We do not have a login with that ID.");
         }
         else
-            ActiveAccount = null;
-
-        this.RaisePropertyChanged(nameof(ActiveAccount));
-        _dataManager.SelectedLoginId = newAccountId;
-
-        if (_dataManager.GetCVar(SanabiCVars.SpoofFingerprintOnLogin))
-            _dataManager.RegenerateSpoofedFingerprint();
-
-        OnActiveAccountChanged?.Invoke(ActiveAccount);
+            SetActiveAccountFull(null, null);
     }
 
     /// <summary>
@@ -87,11 +79,16 @@ public sealed class LoginManager : ReactiveObject
     ///         if none is provided.
     /// </summary>
     public void SetActiveAccount(LoggedInAccount? loggedInAccount)
-    {
-        ActiveAccount = loggedInAccount;
-        this.RaisePropertyChanged(nameof(ActiveAccount));
+        => SetActiveAccountFull(loggedInAccount?.UserId, loggedInAccount);
 
-        OnActiveAccountChanged?.Invoke(loggedInAccount);
+    public void SetActiveAccountFull(Guid? newAccountId, LoggedInAccount? newLoggedInAccount)
+    {
+        ActiveAccount = newLoggedInAccount;
+
+        this.RaisePropertyChanged(nameof(ActiveAccount));
+        _dataManager.SelectedLoginId = newAccountId;
+
+        OnActiveAccountChanged?.Invoke(ActiveAccount);
     }
 
     /// <summary>

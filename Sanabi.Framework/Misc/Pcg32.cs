@@ -55,4 +55,18 @@ public struct Pcg32
                 dest[i++] = (byte)(r >> (j * 8));
         }
     }
+
+    public Guid NextGuid()
+    {
+        Span<byte> bytes = stackalloc byte[16];
+        NextBytes(bytes);
+
+        // Set version (4)
+        bytes[6] = (byte)((bytes[6] & 0x0F) | 0x40);
+
+        // Set variant (RFC 4122)
+        bytes[8] = (byte)((bytes[8] & 0x3F) | 0x80);
+
+        return new Guid(bytes);
+    }
 }

@@ -83,8 +83,7 @@ public sealed class MainWindowViewModel : ViewModelBase, IErrorOverlayOwner
 
     public void InitialiseModel()
     {
-        if (_cfg.GetCVar(SanabiCVars.StartLoggedIn) &&
-            _cfg.SelectedLoginId is { } selectedLoginId &&
+        if (_cfg.SelectedLoginId is { } selectedLoginId &&
             _loginMgr.Logins.TryLookup(selectedLoginId, out var loginData))
         {
             TrySwitchToAccount(loginData);
@@ -105,7 +104,7 @@ public sealed class MainWindowViewModel : ViewModelBase, IErrorOverlayOwner
     private async void SCRISK_DoStartingInitialisation()
     {
         _didStartingInit = true;
-        BusyTask = "Doing endpoint initalisation";
+        BusyTask = "Doing endpoint initialisation";
 
         var launcherInfo = Locator.Current.GetRequiredService<LauncherInfoManager>();
         var overrideAssets = Locator.Current.GetRequiredService<OverrideAssetsManager>();

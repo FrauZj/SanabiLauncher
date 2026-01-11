@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using ReactiveUI;
 using Sanabi.Framework.Data;
 using Splat;
 using SS14.Launcher.Localization;
@@ -97,32 +98,12 @@ public class OptionsTabViewModel : MainWindowTabViewModel
         }
     }
 
-    public bool SpoofFingerprintOnLogin
-    {
-        get => Cfg.GetCVar(SanabiCVars.SpoofFingerprintOnLogin);
-        set
-        {
-            Cfg.SetCVar(SanabiCVars.SpoofFingerprintOnLogin, value);
-            Cfg.CommitConfig();
-        }
-    }
-
     public bool AllowHwid
     {
         get => Cfg.GetCVar(SanabiCVars.AllowHwid);
         set
         {
             Cfg.SetCVar(SanabiCVars.AllowHwid, value);
-            Cfg.CommitConfig();
-        }
-    }
-
-    public bool StartLoggedIn
-    {
-        get => Cfg.GetCVar(SanabiCVars.StartLoggedIn);
-        set
-        {
-            Cfg.SetCVar(SanabiCVars.StartLoggedIn, value);
             Cfg.CommitConfig();
         }
     }
@@ -135,6 +116,35 @@ public class OptionsTabViewModel : MainWindowTabViewModel
             Cfg.SetCVar(SanabiCVars.StartOnLoginMenu, value);
             Cfg.CommitConfig();
         }
+    }
+
+    public string SpoofingSeedText
+    {
+        get => BitConverter.ToUInt64(BitConverter.GetBytes(Cfg.GetActiveAccountCVarOrDefault(SanabiAccountCVars.SpoofingSeed)), 0).ToString();
+        set
+        {
+            Console.WriteLine($"Parsing {value}");
+            if (ulong.TryParse(value, out var ulongValue) &&
+                Cfg.TrySetActiveAccountCVar(SanabiAccountCVars.SpoofingSeed, BitConverter.ToInt64(BitConverter.GetBytes(ulongValue), 0)))
+            {
+                Cfg.CommitConfig();
+            }
+
+            this.RaisePropertyChanged(propertyName: nameof(SpoofingSeedText));
+        }
+    }
+
+    /// <summary>
+    ///     Regenerates <see cref="SanabiAccountCVars.SpoofingSeed"/>
+    ///         to something random.
+    /// </summary>
+    public void RegenerateAccountSeed()
+    {
+        var bytes = (Span<byte>)stackalloc byte[8];
+        new Random().NextBytes(bytes);
+
+        // setting cvar is redundant here
+        SpoofingSeedText = BitConverter.ToUInt64(bytes).ToString();
     }
     #endregion
 

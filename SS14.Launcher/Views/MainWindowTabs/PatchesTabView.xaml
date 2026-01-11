@@ -52,19 +52,8 @@
                   Content="Enable HWID spoofing patch"/>
         <TextBlock VerticalAlignment="Center"
                    TextWrapping="Wrap"
-                   Text="Patches out HWID to be spoofed when connecting to a server. Only applies if engine patching is enabled."
+                   Text="Patches out HWID to be spoofed when connecting to a server. Only applies if engine patching is enabled. Based on the account's seed configured in the config."
                    Margin="8"/>
-
-        <TextBlock VerticalAlignment="Center"
-                   TextWrapping="Wrap"
-                   Text="Seed to use when generating spoofed HWID. This is interpreted as an unsigned 64-bit integer [ulong]; it is 20 digits at maximum."
-                   Margin="8"/>
-        <TextBox Name="UlongBox"
-                 Text="{Binding SpoofedHwidSeedText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-        <Button Content="Regenerate HWID seed"
-                DockPanel.Dock="Bottom"
-                HorizontalAlignment="Left"
-                Command="{Binding RegenerateHwidSeed}"/>
 
         <CheckBox VerticalAlignment="Center"
                   Margin="4"

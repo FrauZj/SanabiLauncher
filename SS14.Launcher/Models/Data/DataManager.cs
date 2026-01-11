@@ -18,6 +18,7 @@ using Microsoft.Toolkit.Mvvm.Messaging;
 using Mono.Posix;
 using ReactiveUI;
 using Sanabi.Framework.Data;
+using Sanabi.Framework.Misc;
 using Serilog;
 using Splat;
 using SS14.Common.Data.CVars;
@@ -121,6 +122,7 @@ public sealed class DataManager : ReactiveObject
     {
         _loginManager = loginManager;
         _loginManager.OnActiveAccountChanged += OnActiveAccountChanged;
+        _loginManager.OnActiveAccountChanged += _ => RegenerateSpoofedFingerprint();
     }
 
     private void OnActiveAccountChanged(LoggedInAccount? newlyActiveAccount)
@@ -339,8 +341,11 @@ public sealed class DataManager : ReactiveObject
     /// </summary>
     public void RegenerateSpoofedFingerprint()
     {
-        SpoofedFingerprint = Guid.NewGuid().ToString();
+        var seed = BitConverter.ToUInt64(BitConverter.GetBytes(GetActiveAccountCVarOrDefault(SanabiAccountCVars.SpoofingSeed)), 0);
+        SpoofedFingerprint = new Pcg32(seed).NextGuid().ToString();
         OnSpoofedFingerprintRegenerated?.Invoke();
+
+        Log.Information($"НАШ fingerprint: {SpoofedFingerprint}");
     }
 
     /// <summary>
@@ -511,9 +516,13 @@ public sealed class DataManager : ReactiveObject
     ///         If no appropriate value is found, returns the given CVar's <see cref="CVarDef.DefaultValue"/>.
     /// </summary>
     public T GetAccountCVarOrDefault<T>(CVarDef<T> cVarDef, Guid? guid)
-        => guid == null ?
-        cVarDef.DefaultValue :
-        GetAccountCVarEntry(cVarDef, guid.Value).Value;
+    {
+        if (guid == null ||
+            !_configEntries.TryGetValue(GetAccountCVarIdentifier(cVarDef, guid.Value), out var entryNonGeneric))
+            return cVarDef.DefaultValue;
+
+        return ((CVarEntry<T>)entryNonGeneric).Value;
+    }
 
     /// <summary>
     ///     Gets the value of a <see cref="CVarDef{T}"/> linked to the <see cref="Guid"/>

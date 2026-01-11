@@ -42,7 +42,7 @@ public static class SanabiConfigExtensions
             PatchRunLevel.None;
 
         config.RunHwidPatch = dataManager.GetCVar(SanabiCVars.HwidPatchEnabled);
-        config.HwidPatchSeed = BitConverter.ToUInt64(BitConverter.GetBytes(dataManager.GetActiveAccountCVarOrDefault(SanabiAccountCVars.SpoofedHwidSeed)), 0);
+        config.HwidPatchSeed = BitConverter.ToUInt64(BitConverter.GetBytes(dataManager.GetActiveAccountCVarOrDefault(SanabiAccountCVars.SpoofingSeed)), 0);
         config.LoadInternalMods = dataManager.GetCVar(SanabiCVars.LoadInternalMods);
         config.LoadExternalMods = dataManager.GetCVar(SanabiCVars.LoadExternalMods);
 
