@@ -69,7 +69,7 @@ public sealed class MainWindowViewModel : ViewModelBase, IErrorOverlayOwner
         AccountDropDown = new AccountDropDownViewModel(this);
         LoginViewModel = new MainWindowLoginViewModel(this);
 
-        _loginMgr.OnActiveAccountChanged += (_) =>
+        _loginMgr.AfterActiveAccountUpdate += (_) =>
         {
             this.RaisePropertyChanged(nameof(Username));
             this.RaisePropertyChanged(nameof(ShowLoginMenu));

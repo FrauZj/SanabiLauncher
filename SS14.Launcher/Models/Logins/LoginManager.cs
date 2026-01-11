@@ -36,10 +36,17 @@ public sealed class LoginManager : ReactiveObject
     public LoggedInAccount? ActiveAccount { get; private set; }
 
     /// <summary>
+    ///     Raised right before the account seed has been regenerated (if necessary) and AfterActiveAccountUpdate is raised, but after
+    ///         the new active account has been set. The single parameter is the
+    ///         new account.
+    /// </summary>
+    public Action<LoggedInAccount?>? BeforeActiveAccountUpdate = null;
+
+    /// <summary>
     ///     Raised when the active account is changed, with the single
     ///         parameter being the new account.
     /// </summary>
-    public Action<LoggedInAccount?>? OnActiveAccountChanged = null;
+    public Action<LoggedInAccount?>? AfterActiveAccountUpdate = null;
 
     /// <summary>
     ///     Sets a new account to be active in by it's ID, or logs out (if possible)
@@ -88,7 +95,20 @@ public sealed class LoginManager : ReactiveObject
         this.RaisePropertyChanged(nameof(ActiveAccount));
         _dataManager.SelectedLoginId = newAccountId;
 
-        OnActiveAccountChanged?.Invoke(ActiveAccount);
+        BeforeActiveAccountUpdate?.Invoke(ActiveAccount);
+
+        if (newAccountId.HasValue &&
+            _dataManager.GetAccountCVarOrDefault(SanabiAccountCVars.ShouldRegenerateSeed, newAccountId))
+        {
+            var ulongBytes = (Span<byte>)stackalloc byte[8];
+            new Random().NextBytes(ulongBytes);
+
+            _dataManager.SetAccountCVar(SanabiAccountCVars.SpoofingSeed, newAccountId.Value, BitConverter.ToInt64(ulongBytes));
+            _dataManager.SetAccountCVar(SanabiAccountCVars.ShouldRegenerateSeed, newAccountId.Value, false);
+            _dataManager.CommitConfig();
+        }
+
+        AfterActiveAccountUpdate?.Invoke(ActiveAccount);
     }
 
     /// <summary>

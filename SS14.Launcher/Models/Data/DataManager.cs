@@ -121,11 +121,11 @@ public sealed class DataManager : ReactiveObject
     public void SetLoginManager(LoginManager loginManager)
     {
         _loginManager = loginManager;
-        _loginManager.OnActiveAccountChanged += OnActiveAccountChanged;
-        _loginManager.OnActiveAccountChanged += _ => RegenerateSpoofedFingerprint();
+        _loginManager.BeforeActiveAccountUpdate += BeforeActiveAccountUpdate;
+        _loginManager.AfterActiveAccountUpdate += _ => RegenerateSpoofedFingerprint();
     }
 
-    private void OnActiveAccountChanged(LoggedInAccount? newlyActiveAccount)
+    private void BeforeActiveAccountUpdate(LoggedInAccount? newlyActiveAccount)
     {
         if (newlyActiveAccount == null)
             return;
