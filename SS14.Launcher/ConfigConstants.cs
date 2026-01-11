@@ -39,7 +39,6 @@ public static class ConfigConstants
 
     /// <summary>
     ///     Mirror wizden hub URL(s).
-    ///         Includes `https://cdn.spacestationmultiverse.com/wizden-hub-mirror/`.
     /// </summary>
     public static readonly Uri[] MirrorHubUrls =
     [
