@@ -114,7 +114,7 @@ public sealed class MainWindowViewModel : ViewModelBase, IErrorOverlayOwner
         overrideAssets.Initialize();
 
         BusyTask = _loc.GetString("main-window-busy-checking-update");
-        await SCRISK_CheckLauncherUpdate();
+        //await SCRISK_CheckLauncherUpdate();
 
         BusyTask = null;
     }
@@ -232,7 +232,8 @@ public sealed class MainWindowViewModel : ViewModelBase, IErrorOverlayOwner
 
     public void ExitPressed()
     {
-        Control?.Close();
+        OutOfDate = false;
+        //Control?.Close();
     }
 
     public void DownloadPressed()

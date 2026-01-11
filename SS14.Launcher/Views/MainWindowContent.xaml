@@ -143,7 +143,7 @@
                    Text="{loc:Loc main-window-out-of-date-desc}"/>
         <DockPanel LastChildFill="False">
           <Button DockPanel.Dock="Right"
-                  Content="{loc:Loc main-window-out-of-date-exit}"
+                  Content="Dismiss"
                   Command="{Binding ExitPressed}"/>
           <Button DockPanel.Dock="Left"
                   Content="{loc:Loc main-window-out-of-date-download-manual}"
