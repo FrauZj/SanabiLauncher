@@ -48,6 +48,10 @@ public static class AssemblyLoadingManager
             return;
 
         var internalModLoader = ReflectionManager.GetTypeByQualifiedName("Robust.Shared.ContentPack.ModLoader");
+        var baseModLoader = ReflectionManager.GetTypeByQualifiedName("Robust.Shared.ContentPack.BaseModLoader ");
+
+        _modInitMethod = PatchHelpers.GetMethod(internalModLoader, "InitMod")
+            ?? throw new InvalidOperationException("Couldn't resolve BaseModLoader.InitMod!");
 
         PatchHelpers.PatchMethod(
             internalModLoader,
