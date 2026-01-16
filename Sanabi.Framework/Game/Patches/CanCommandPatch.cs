@@ -44,11 +44,22 @@ public static class CanCommandPatch
         PatchHelpers.PatchMethod(clientConGroupControllerType, "CanAdminPlace", Prefix, HarmonyPatchType.Prefix);
         PatchHelpers.PatchMethod(clientConGroupControllerType, "CanScript", Prefix, HarmonyPatchType.Prefix);
         PatchHelpers.PatchMethod(clientConGroupControllerType, "CanAdminMenu", Prefix, HarmonyPatchType.Prefix);
+
+        if (ReflectionManager.TryGetTypeByQualifiedName("Robust.Server.Console.Commands.ListPlayers", out var listPlayersCommandType))
+            PatchHelpers.PatchMethod(listPlayersCommandType, "Execute", PrefixListPlayers, HarmonyPatchType.Prefix);
     }
 
     private static bool Prefix(ref bool __result)
     {
         __result = true;
+        return false;
+    }
+
+    private static bool PrefixListPlayers(ref dynamic __instance, ref dynamic shell)
+    {
+        foreach (var ses in __instance._playersManager.Sessions)
+            shell.WriteLine(ses.Name);
+
         return false;
     }
 }
