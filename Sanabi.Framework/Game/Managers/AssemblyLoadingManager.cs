@@ -16,7 +16,7 @@ namespace Sanabi.Framework.Game.Managers;
 public static class AssemblyLoadingManager
 {
     public static int TotalExternalModCount = 0;
-    private static readonly Stack<Assembly> _assembliesPendingLoad = new();
+    private static readonly Queue<Assembly> _assembliesPendingLoad = new(); // Important to be Queue rather than Stack to preserve order of assemblies
     private static MethodInfo _modInitMethod = default!;
 
     /// <summary>
@@ -87,15 +87,15 @@ public static class AssemblyLoadingManager
 
         TotalExternalModCount = externalDlls.Length;
         foreach (var dll in externalDlls)
-            _assembliesPendingLoad.Push(Assembly.LoadFrom(dll));
+            _assembliesPendingLoad.Enqueue(Assembly.LoadFrom(dll));
     }
 
     private static void ModLoaderPostfix(ref dynamic __instance)
     {
         var index = 0;
-        while (_assembliesPendingLoad.TryPop(out var assembly))
+        while (_assembliesPendingLoad.TryDequeue(out var assembly))
         {
-            if (!GetIsModEnabled(SanabiConfig.ProcessConfig.LoadedExternalModsFlags, index++))
+            if (GetIsModEnabled(SanabiConfig.ProcessConfig.LoadedExternalModsFlags, index++))
                 continue;
 
             LoadModAssembly(ref __instance, assembly);

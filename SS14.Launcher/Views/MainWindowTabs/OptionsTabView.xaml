@@ -120,62 +120,6 @@ You can put (one or more) images in 'SS14 Data folder -> launcher -> sanabi -> s
 
         <Separator Classes="horizontal"
                    Margin="0,5,0,5"/>
-        <TextBlock HorizontalAlignment="Center"
-                   Text="SanabiLauncher-specific settings"
-                   Classes="NanoHeadingMedium"/>
-
-        <CheckBox VerticalAlignment="Center"
-                  Margin="4"
-                  IsChecked="{Binding PassFingerprint}"
-                  Content="Pass launcher fingerprint"/>
-        <TextBlock VerticalAlignment="Center"
-                   TextWrapping="Wrap"
-                   Text="Should the launcher pass it's fingerprint to everything via http? Turning this off may be sus."
-                   Margin="8"/>
-
-        <CheckBox VerticalAlignment="Center"
-                  Margin="4"
-                  IsChecked="{Binding PassSpoofedFingerprint}"
-                  Content="Spoof launcher fingerprint"/>
-        <TextBlock VerticalAlignment="Center"
-                   TextWrapping="Wrap"
-                   Text="If passing the launcher fingerprint, do we create and use new, spoofed random one every time the launcher is started?"
-                   Margin="8"/>
-
-        <CheckBox VerticalAlignment="Center"
-                  Margin="4"
-                  IsChecked="{Binding AllowHwid}"
-                  Content="Send HWID to server"/>
-        <TextBlock VerticalAlignment="Center"
-                   TextWrapping="Wrap"
-                   Text="When connecting to a server, willingly send HWID to Robust Auth? Modern servers require this otherwise you get disconnected with an appropriate message. Different from patching out the HWID."
-                   Margin="8"/>
-
-        <CheckBox VerticalAlignment="Center"
-                  Margin="4"
-                  IsChecked="{Binding StartOnLoginMenu}"
-                  Content="Start launcher on login menu"/>
-        <TextBlock VerticalAlignment="Center"
-                   TextWrapping="Wrap"
-                   Text="Should the launcher start on the login menu (where no external API has yet been queried) or on the homepage (where hub API is likely to be queried). Turning this on can help against detection if you know what you are doing."
-                   Margin="8"/>
-
-        <Separator Classes="horizontal"
-                   Margin="0,5,0,5"/>
-
-        <TextBlock VerticalAlignment="Center"
-                   TextWrapping="Wrap"
-                   Text="Seed to use when generating spoofed HWID and spoofed fingerprint. This is interpreted as an unsigned 64-bit integer [ulong]; it is 20 digits at maximum."
-                   Margin="8"/>
-        <TextBox Name="UlongBox"
-                 Text="{Binding SpoofingSeedText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-        <Button Content="Regenerate account seed"
-                DockPanel.Dock="Bottom"
-                HorizontalAlignment="Left"
-                Command="{Binding RegenerateAccountSeed}"/>
-
-        <Separator Classes="horizontal"
-                   Margin="0,5,0,5"/>
       </StackPanel>
     </DockPanel>
   </ScrollViewer>

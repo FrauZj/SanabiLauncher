@@ -16,21 +16,12 @@
 
   <ScrollViewer HorizontalScrollBarVisibility="Disabled">
     <DockPanel>
-      <Button Content="Mod Directory"
-              DockPanel.Dock="Bottom"
-              HorizontalAlignment="Left"
-              Command="{Binding OpenModDirectory}"/>
-
-      <TextBlock DockPanel.Dock="Top"
-                 HorizontalAlignment="Center"
-                 VerticalAlignment="Center"
-                 TextWrapping="Wrap"
-                 Text="Fuck with patching here."/>
-
       <StackPanel Orientation="Vertical">
+        <!-- PATCHING START -->
+
         <TextBlock HorizontalAlignment="Center"
-                   Text="Top-level patching"
-                   Classes="NanoHeadingMedium"/>
+                   Text="Patching"
+                   Classes="NanoHeading"/>
 
         <CheckBox VerticalAlignment="Center"
                   Margin="4"
@@ -93,8 +84,9 @@
                        Text="Selected external mods"
                        Classes="NanoHeadingSmall"/>
             <Button Content="Refresh modlist"
-                    HorizontalAlignment="Left"
-                    Command="{Binding RefreshPatches}"/>
+                    HorizontalAlignment="Center"
+                    Command="{Binding RefreshPatches}"
+                    Margin="0,5,0,10"/>
             <ItemsControl ItemsSource="{Binding PatchList}"
                           Name="Hubs"
                           Classes="Spaced">
@@ -115,8 +107,86 @@
           </StackPanel>
         </ScrollViewer>
 
+        <Button Content="Mod Directory"
+                HorizontalAlignment="Center"
+                Command="{Binding OpenModDirectory}"
+                Margin="0,10,0,5"/>
+
         <Separator Classes="horizontal"
                    Margin="0,5,0,5"/>
+
+
+        <!-- SPOOFING START -->
+
+        <TextBlock HorizontalAlignment="Center"
+                   Text="Spoofing"
+                   Classes="NanoHeading"/>
+
+        <TextBlock HorizontalAlignment="Center"
+                   Text="Fingerprint"
+                   Classes="NanoHeadingMedium"/>
+
+        <CheckBox VerticalAlignment="Center"
+                  Margin="4"
+                  IsChecked="{Binding PassFingerprint}"
+                  Content="Pass launcher fingerprint"/>
+        <TextBlock VerticalAlignment="Center"
+                   TextWrapping="Wrap"
+                   Text="Should the launcher pass it's fingerprint to everything via http? Turning this off may be sus."
+                   Margin="8"/>
+
+        <CheckBox VerticalAlignment="Center"
+                  Margin="4"
+                  IsChecked="{Binding PassSpoofedFingerprint}"
+                  Content="Spoof launcher fingerprint"/>
+        <TextBlock VerticalAlignment="Center"
+                   TextWrapping="Wrap"
+                   Text="If passing the launcher fingerprint, do we create and use new, spoofed random one every time the launcher is started?"
+                   Margin="8"/>
+
+        <Separator Classes="horizontal"
+                   Margin="0,5,0,5"/>
+        <TextBlock HorizontalAlignment="Center"
+                   Text="HWID"
+                   Classes="NanoHeadingMedium"/>
+
+        <CheckBox VerticalAlignment="Center"
+                  Margin="4"
+                  IsChecked="{Binding AllowHwid}"
+                  Content="Send HWID to server"/>
+        <TextBlock VerticalAlignment="Center"
+                   TextWrapping="Wrap"
+                   Text="When connecting to a server, willingly send HWID to Robust Auth? Modern servers require this otherwise you get disconnected with an appropriate message. Different from patching out the HWID."
+                   Margin="8"/>
+
+        <Separator Classes="horizontal"
+                   Margin="0,2,0,2"/>
+
+        <TextBlock VerticalAlignment="Center"
+                   TextWrapping="Wrap"
+                   Text="Seed to use when generating spoofed HWID and spoofed fingerprint. This is interpreted as an unsigned 64-bit integer [ulong]; it is 20 digits at maximum."
+                   Margin="8"/>
+        <TextBox Name="UlongBox"
+                 Text="{Binding SpoofingSeedText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        <Button Content="Regenerate account seed"
+                DockPanel.Dock="Bottom"
+                HorizontalAlignment="Left"
+                Command="{Binding RegenerateAccountSeed}"/>
+
+        <Separator Classes="horizontal"
+                   Margin="0,5,0,5"/>
+        <TextBlock HorizontalAlignment="Center"
+                   Text="Misc."
+                   Classes="NanoHeadingMedium"/>
+
+        <CheckBox VerticalAlignment="Center"
+                  Margin="4"
+                  IsChecked="{Binding StartOnLoginMenu}"
+                  Content="Start launcher on login menu"/>
+        <TextBlock VerticalAlignment="Center"
+                   TextWrapping="Wrap"
+                   Text="Should the launcher start on the login menu (where no external API has yet been queried) or on the homepage (where hub API is likely to be queried). Turning this on can help against detection if you know what you are doing."
+                   Margin="8"/>
 
       </StackPanel>
     </DockPanel>

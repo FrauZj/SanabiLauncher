@@ -7,6 +7,8 @@ using System.Diagnostics;
 using Sanabi.Framework.Data;
 using System.Collections.ObjectModel;
 using Sanabi.Framework.Game.Managers;
+using System;
+using ReactiveUI;
 
 namespace SS14.Launcher.ViewModels.MainWindowTabs;
 
@@ -30,14 +32,15 @@ public class SanabiTabViewModel : MainWindowTabViewModel
         if (!AssemblyLoadingManager.TryGetExternalDlls(out var externalDlls))
             return;
 
-        var i = 0;
+        var index = 0;
         var originalMap = Cfg.GetCVar(SanabiCVars.LoadedExternalModsFlags);
 
         foreach (var dll in externalDlls)
         {
-            var patchVm = new LoadedPatchViewmodel(this, Path.GetFileName(dll), i++);
-            patchVm.SetEnabled(AssemblyLoadingManager.GetIsModEnabled(originalMap, i), originalMap);
+            var patchVm = new LoadedPatchViewmodel(this, Path.GetFileName(dll), index);
+            patchVm.SetEnabled(AssemblyLoadingManager.GetIsModEnabled(originalMap, index), originalMap);
 
+            index++;
             PatchList.Add(patchVm);
         }
     }
@@ -88,6 +91,75 @@ public class SanabiTabViewModel : MainWindowTabViewModel
     {
         get => Cfg.GetCVar(SanabiCVars.LoadExternalMods);
         set => SetAndCommitCvar(SanabiCVars.LoadExternalMods, value);
+    }
+
+    public bool PassFingerprint
+    {
+        get => Cfg.GetCVar(SanabiCVars.PassFingerprint);
+        set
+        {
+            Cfg.SetCVar(SanabiCVars.PassFingerprint, value);
+            Cfg.CommitConfig();
+        }
+    }
+
+    public bool PassSpoofedFingerprint
+    {
+        get => Cfg.GetCVar(SanabiCVars.PassSpoofedFingerprint);
+        set
+        {
+            Cfg.SetCVar(SanabiCVars.PassSpoofedFingerprint, value);
+            Cfg.CommitConfig();
+        }
+    }
+
+    public bool AllowHwid
+    {
+        get => Cfg.GetCVar(SanabiCVars.AllowHwid);
+        set
+        {
+            Cfg.SetCVar(SanabiCVars.AllowHwid, value);
+            Cfg.CommitConfig();
+        }
+    }
+
+    public bool StartOnLoginMenu
+    {
+        get => Cfg.GetCVar(SanabiCVars.StartOnLoginMenu);
+        set
+        {
+            Cfg.SetCVar(SanabiCVars.StartOnLoginMenu, value);
+            Cfg.CommitConfig();
+        }
+    }
+
+    public string SpoofingSeedText
+    {
+        get => BitConverter.ToUInt64(BitConverter.GetBytes(Cfg.GetActiveAccountCVarOrDefault(SanabiAccountCVars.SpoofingSeed)), 0).ToString();
+        set
+        {
+            if (ulong.TryParse(value, out var ulongValue) &&
+                Cfg.TrySetActiveAccountCVar(SanabiAccountCVars.SpoofingSeed, BitConverter.ToInt64(BitConverter.GetBytes(ulongValue), 0)))
+            {
+                Cfg.CommitConfig();
+            }
+
+            this.RaisePropertyChanged(propertyName: nameof(SpoofingSeedText));
+        }
+    }
+
+    /// <summary>
+    ///     Regenerates <see cref="SanabiAccountCVars.SpoofingSeed"/>
+    ///         to something random.
+    /// </summary>
+    // Binding; do not rename/remove/change signature
+    public void RegenerateAccountSeed()
+    {
+        var bytes = (Span<byte>)stackalloc byte[8];
+        new Random().NextBytes(bytes);
+
+        // setting cvar is redundant here
+        SpoofingSeedText = BitConverter.ToUInt64(bytes).ToString();
     }
 }
 
