@@ -32,4 +32,11 @@ public static partial class SanabiCVars
     ///         mods directory?
     /// </summary>
     public static readonly CVarDef<bool> LoadExternalMods = CVarDef.Create("LoadExternalMods", false);
+
+    /// <summary>
+    ///     Map of flags representing which external mods were loaded.
+    ///         First loaded mod is on the right-most bit.
+    /// </summary>
+    // If you decide to change this to something other than long then change code in AssemblyLoadingManager
+    public static readonly CVarDef<long> LoadedExternalModsFlags = CVarDef.Create("LoadedExternalModsFlags", 0L);
 }

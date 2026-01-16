@@ -118,6 +118,12 @@ You can put (one or more) images in 'SS14 Data folder -> launcher -> sanabi -> s
                    Text="{loc:Loc tab-options-hub-settings-desc}"
                    Margin="8"/>
 
+        <Separator Classes="horizontal"
+                   Margin="0,5,0,5"/>
+        <TextBlock HorizontalAlignment="Center"
+                   Text="SanabiLauncher-specific settings"
+                   Classes="NanoHeadingMedium"/>
+
         <CheckBox VerticalAlignment="Center"
                   Margin="4"
                   IsChecked="{Binding PassFingerprint}"

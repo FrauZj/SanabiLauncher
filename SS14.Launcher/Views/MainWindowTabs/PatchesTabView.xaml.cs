@@ -2,9 +2,9 @@ using Avalonia.Controls;
 
 namespace SS14.Launcher.Views.MainWindowTabs;
 
-public partial class PatchesTabView : UserControl
+public partial class SanabiTabView : UserControl
 {
-    public PatchesTabView()
+    public SanabiTabView()
     {
         InitializeComponent();
     }

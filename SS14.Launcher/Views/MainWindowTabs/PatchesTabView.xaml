@@ -8,10 +8,10 @@
              mc:Ignorable="d"
              d:DesignWidth="800"
              d:DesignHeight="450"
-             x:Class="SS14.Launcher.Views.MainWindowTabs.PatchesTabView"
-             Name="PatchesTab">
+             x:Class="SS14.Launcher.Views.MainWindowTabs.SanabiTabView"
+             Name="SanabiTab">
   <Design.DataContext>
-    <mainWindowTabs:PatchesTabViewModel/>
+    <mainWindowTabs:SanabiTabViewModel/>
   </Design.DataContext>
 
   <ScrollViewer HorizontalScrollBarVisibility="Disabled">
@@ -28,6 +28,10 @@
                  Text="Fuck with patching here."/>
 
       <StackPanel Orientation="Vertical">
+        <TextBlock HorizontalAlignment="Center"
+                   Text="Top-level patching"
+                   Classes="NanoHeadingMedium"/>
+
         <CheckBox VerticalAlignment="Center"
                   Margin="4"
                   IsChecked="{Binding PatchingEnabled}"
@@ -35,24 +39,6 @@
         <TextBlock VerticalAlignment="Center"
                    TextWrapping="Wrap"
                    Text="Enable any kind of patching? Inherently enables engine patching."
-                   Margin="8"/>
-
-        <CheckBox VerticalAlignment="Center"
-                  Margin="4"
-                  IsChecked="{Binding PatchingLevel}"
-                  Content="Patch content"/>
-        <TextBlock VerticalAlignment="Center"
-                   TextWrapping="Wrap"
-                   Text="If checked, then both engine and content will be patched. Otherwise, only patches engine. Obviously only applies if patching is enabled."
-                   Margin="8"/>
-
-        <CheckBox VerticalAlignment="Center"
-                  Margin="4"
-                  IsChecked="{Binding HwidPatchEnabled}"
-                  Content="Enable HWID spoofing patch"/>
-        <TextBlock VerticalAlignment="Center"
-                   TextWrapping="Wrap"
-                   Text="Patches out HWID to be spoofed when connecting to a server. Only applies if engine patching is enabled. Based on the account's seed configured in the config."
                    Margin="8"/>
 
         <CheckBox VerticalAlignment="Center"
@@ -66,12 +52,72 @@
 
         <CheckBox VerticalAlignment="Center"
                   Margin="4"
+                  IsChecked="{Binding PatchingLevel}"
+                  Content="Patch content"/>
+        <TextBlock VerticalAlignment="Center"
+                   TextWrapping="Wrap"
+                   Text="If checked, then both engine and content will be patched. Otherwise, only patches engine. Obviously only applies if patching is enabled."
+                   Margin="8"/>
+
+        <Separator Classes="horizontal"
+                   Margin="0,5,0,5"/>
+
+        <CheckBox VerticalAlignment="Center"
+                  Margin="4"
+                  IsChecked="{Binding HwidPatchEnabled}"
+                  Content="Enable HWID spoofing patch"/>
+        <TextBlock VerticalAlignment="Center"
+                   TextWrapping="Wrap"
+                   Text="Patches out HWID to be spoofed when connecting to a server. Only applies if engine patching is enabled. Based on the account's seed configured in the config."
+                   Margin="8"/>
+
+        <Separator Classes="horizontal"
+                   Margin="0,5,0,5"/>
+
+        <TextBlock HorizontalAlignment="Center"
+                   Text="External mods"
+                   Classes="NanoHeadingMedium"/>
+
+        <CheckBox VerticalAlignment="Center"
+                  Margin="4"
                   IsChecked="{Binding LoadExternalMods}"
                   Content="Enable external mods"/>
         <TextBlock VerticalAlignment="Center"
                    TextWrapping="Wrap"
                    Text="If patching is enabled, do we patch external mods; those that are in the mod's mod directory?"
                    Margin="8"/>
+
+        <ScrollViewer DockPanel.Dock="Top">
+          <StackPanel Spacing="2">
+            <TextBlock DockPanel.Dock="Left"
+                       Text="Selected external mods"
+                       Classes="NanoHeadingSmall"/>
+            <Button Content="Refresh modlist"
+                    HorizontalAlignment="Left"
+                    Command="{Binding RefreshPatches}"/>
+            <ItemsControl ItemsSource="{Binding PatchList}"
+                          Name="Hubs"
+                          Classes="Spaced">
+
+              <!-- Template -->
+              <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                  <DockPanel>
+                    <CheckBox VerticalAlignment="Center"
+                              Margin="4"
+                              IsChecked="{Binding IsEnabled}"/>
+                    <TextBox Text="{Binding Filename}"
+                             IsEnabled="False"/>
+                  </DockPanel>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+          </StackPanel>
+        </ScrollViewer>
+
+        <Separator Classes="horizontal"
+                   Margin="0,5,0,5"/>
+
       </StackPanel>
     </DockPanel>
   </ScrollViewer>

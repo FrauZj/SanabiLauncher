@@ -60,7 +60,7 @@ public sealed class MainWindowViewModel : ViewModelBase, IErrorOverlayOwner
         tabs.Add(ServersTab);
         //tabs.Add(NewsTab);
         tabs.Add(OptionsTab);
-        tabs.Add(new PatchesTabViewModel());
+        tabs.Add(new SanabiTabViewModel());
 #if DEVELOPMENT
         tabs.Add(new DevelopmentTabViewModel());
 #endif

@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using HarmonyLib;
 using Sanabi.Framework.Data;
@@ -9,11 +10,12 @@ using SS14.Launcher;
 namespace Sanabi.Framework.Game.Managers;
 
 /// <summary>
-///     Handles loading mods from the mods directory,
+///     Handles loading external mods from the mods directory,
 ///         into the game.
 /// </summary>
 public static class AssemblyLoadingManager
 {
+    public static int TotalExternalModCount = 0;
     private static readonly Stack<Assembly> _assembliesPendingLoad = new();
     private static MethodInfo _modInitMethod = default!;
 
@@ -41,6 +43,26 @@ public static class AssemblyLoadingManager
         Console.WriteLine($"Entered patch at {entryMethod.DeclaringType?.FullName}");
     }
 
+    public static bool TryGetExternalDlls([MaybeNullWhen(false)] out string[] externalDlls)
+    {
+        externalDlls = Directory.GetFiles(LauncherPaths.SanabiModsPath, "*.dll", SearchOption.TopDirectoryOnly);
+        if (externalDlls.Length == 0)
+            return false;
+
+        // wtf why would you ever need more than 64 mods
+        if (externalDlls.Length > 64)
+        {
+            Array.Resize(ref externalDlls, 64);
+            SanabiLogger.LogError("Only the first 64 mods will be loaded!");
+        }
+
+        return true;
+    }
+
+    // Bitmap will fix it
+    public static bool GetIsModEnabled(long bitmap, int index)
+        => (bitmap & (1L << index)) != 0;
+
     [PatchEntry(PatchRunLevel.Engine)]
     private static void Start()
     {
@@ -60,18 +82,24 @@ public static class AssemblyLoadingManager
             HarmonyPatchType.Postfix
         );
 
-        var externalDlls = Directory.GetFiles(LauncherPaths.SanabiModsPath, "*.dll", SearchOption.TopDirectoryOnly);
-        if (externalDlls.Length == 0)
+        if (!TryGetExternalDlls(out var externalDlls))
             return;
 
+        TotalExternalModCount = externalDlls.Length;
         foreach (var dll in externalDlls)
             _assembliesPendingLoad.Push(Assembly.LoadFrom(dll));
     }
 
     private static void ModLoaderPostfix(ref dynamic __instance)
     {
+        var index = 0;
         while (_assembliesPendingLoad.TryPop(out var assembly))
+        {
+            if (!GetIsModEnabled(SanabiConfig.ProcessConfig.LoadedExternalModsFlags, index++))
+                continue;
+
             LoadModAssembly(ref __instance, assembly);
+        }
     }
 
     /// <summary>
