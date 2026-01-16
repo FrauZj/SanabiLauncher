@@ -25,9 +25,8 @@ public static class BwoinkPatch
 
     private static bool Prefix(ref dynamic __instance, dynamic? sender, dynamic message)
     {
-        __instance.UnreadAHelpReceived();
+        //__instance.UnreadAHelpReceived();
         Console.WriteLine("Fuck off! Bwoink.");
-
         return false;
     }
 }
