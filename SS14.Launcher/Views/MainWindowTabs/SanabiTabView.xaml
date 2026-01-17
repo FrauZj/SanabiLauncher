@@ -83,9 +83,9 @@
             <TextBlock DockPanel.Dock="Left"
                        Text="Selected external mods"
                        Classes="NanoHeadingSmall"/>
-            <Button Content="Refresh modlist"
+            <Button Content="Rescan mods"
                     HorizontalAlignment="Center"
-                    Command="{Binding RefreshPatches}"
+                    Command="{Binding RefreshMods}"
                     Margin="0,5,0,10"/>
             <ItemsControl ItemsSource="{Binding PatchList}"
                           Name="Hubs"

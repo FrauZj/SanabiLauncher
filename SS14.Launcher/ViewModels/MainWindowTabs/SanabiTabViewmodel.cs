@@ -21,11 +21,11 @@ public class SanabiTabViewModel : MainWindowTabViewModel
     public SanabiTabViewModel()
     {
         Cfg = Locator.Current.GetRequiredService<DataManager>();
-        RefreshPatches();
+        RefreshMods();
     }
 
     // Binding; do not rename/remove/change signature
-    public void RefreshPatches()
+    public void RefreshMods()
     {
         PatchList.Clear();
 
