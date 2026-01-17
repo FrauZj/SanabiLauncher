@@ -773,7 +773,7 @@ public partial class Connector : ReactiveObject
                     RedirectStandardOutput = true
                 });
 
-                PipeLogOutput(xattr);
+                PipeLogOutput(xattr!);
 
                 await xattr.WaitForExitAsync();
 
