@@ -18,4 +18,4 @@ Features include:
   - - Account seed:
     - - When the HWId spoofing patch is enabled and active, the randomly generated HWId uses this seed to stay the same if the seed is the same.
       - Also used for spoofing of the launcher fingerprint; the unique header which the launcher sends in every HTTP request, that can be used as a vector of detection.
-  - Options to either disable aforementioned launcher fingerprint
+  - Options to disable aforementioned launcher fingerprint
