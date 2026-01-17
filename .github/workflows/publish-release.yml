@@ -27,7 +27,7 @@ jobs:
       with:
         name: "bootstrap"
         retention-days: 1
-        path: "SS14.Launcher.Bootstrap/bin/Release/net10.0-windows/win-x64/publish/Space Station 14 Launcher.exe"
+        path: "SS14.Launcher.Bootstrap/bin/Release/net10.0-windows/win-x64/publish/SanabiLauncher.exe"
 
   build:
     runs-on: ubuntu-latest
@@ -73,8 +73,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./SS14.Launcher_Linux.zip
-        asset_name: SS14.Launcher_Linux.zip
+        asset_path: ./SanabiLauncher_Linux.zip
+        asset_name: SanabiLauncher_Linux.zip
         asset_content_type: application/zip
 
     # Upload Windows
@@ -84,8 +84,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./SS14.Launcher_Windows.zip
-        asset_name: SS14.Launcher_Windows.zip
+        asset_path: ./SanabiLauncher_Windows.zip
+        asset_name: SanabiLauncher_Windows.zip
         asset_content_type: application/zip
 
     # Upload macOS
@@ -95,6 +95,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./SS14.Launcher_macOS.zip
-        asset_name: SS14.Launcher_macOS.zip
+        asset_path: ./SanabiLauncher_macOS.zip
+        asset_name: SanabiLauncher_macOS.zip
         asset_content_type: application/zip

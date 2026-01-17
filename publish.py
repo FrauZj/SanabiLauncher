@@ -60,11 +60,11 @@ def publish_windows(x64_only: bool):
         os.makedirs("bin/publish/Windows/bin_arm64/loader", exist_ok=True)
         os.makedirs("bin/publish/Windows/dotnet_arm64", exist_ok=True)
 
-    bootstrap_path = f"SS14.Launcher.Bootstrap/bin/Release/{TFM}-windows/win-x64/publish/Space Station 14 Launcher.exe"
+    bootstrap_path = f"SS14.Launcher.Bootstrap/bin/Release/{TFM}-windows/win-x64/publish/SanabiLauncher.exe"
     # Natively compiled copy we need to get from a separate worker.
-    if os.path.isfile("Space Station 14 Launcher.exe"):
-        bootstrap_path = "Space Station 14 Launcher.exe"
-    shutil.copyfile(bootstrap_path, "bin/publish/Windows/Space Station 14 Launcher.exe")
+    if os.path.isfile("SanabiLauncher.exe"):
+        bootstrap_path = "SanabiLauncher.exe"
+    shutil.copyfile(bootstrap_path, "bin/publish/Windows/SanabiLauncher.exe")
     shutil.copyfile("SS14.Launcher.Bootstrap/console.bat", "bin/publish/Windows/console.bat")
 
     shutil.copytree("Dependencies/dotnet/windows", "bin/publish/Windows/dotnet_x64", dirs_exist_ok=True)
@@ -76,7 +76,7 @@ def publish_windows(x64_only: bool):
         shutil.copytree(f"SS14.Launcher/bin/Release/{TFM}/win-arm64/publish", "bin/publish/Windows/bin_arm64", dirs_exist_ok=True)
         shutil.copytree(f"SS14.Loader/bin/Release/{TFM}/win-arm64/publish", "bin/publish/Windows/bin_arm64/loader", dirs_exist_ok=True)
 
-    shutil.make_archive("SS14.Launcher_Windows", "zip", "bin/publish/Windows")
+    shutil.make_archive("SanabiLauncher_Windows", "zip", "bin/publish/Windows")
 
 def publish_linux(x64_only: bool):
     update_netcore_runtime([PLATFORM_LINUX])
@@ -112,7 +112,7 @@ def publish_linux(x64_only: bool):
     shutil.copyfile("PublishFiles/SS14.Launcher", "bin/publish/Linux/SS14.Launcher")
     shutil.copyfile("PublishFiles/SS14.desktop", "bin/publish/Linux/SS14.desktop")
 
-    shutil.make_archive("SS14.Launcher_Linux", "zip", "bin/publish/Linux")
+    shutil.make_archive("SanabiLauncher_Linux", "zip", "bin/publish/Linux")
 
 
 def publish_osx():
@@ -121,9 +121,9 @@ def publish_osx():
     clear_prev_publish("macOS")
 
     os.makedirs("bin/publish/macOS", exist_ok=True)
-    shutil.copytree("PublishFiles/Space Station 14 Launcher.app", "bin/publish/macOS/Space Station 14 Launcher.app")
+    shutil.copytree("PublishFiles/SanabiLauncher.app", "bin/publish/macOS/SanabiLauncher.app")
 
-    res_root = "bin/publish/macOS/Space Station 14 Launcher.app/Contents/Resources"
+    res_root = "bin/publish/macOS/SanabiLauncher.app/Contents/Resources"
 
     loader_res_root = f"{res_root}/Space Station 14.app/Contents/Resources"
 
@@ -138,7 +138,7 @@ def publish_osx():
     shutil.copytree("Dependencies/dotnet/mac", f"{res_root}/x86_64/dotnet")
     shutil.copytree("Dependencies/dotnet/mac-arm64", f"{res_root}/arm64/dotnet")
 
-    shutil.make_archive("SS14.Launcher_macOS", "zip", "bin/publish/macOS/")
+    shutil.make_archive("SanabiLauncher_macOS", "zip", "bin/publish/macOS/")
 
 def clear_prev_publish(publish_dir: str):
     shutil.rmtree(f"bin/publish/{publish_dir}", ignore_errors=True)

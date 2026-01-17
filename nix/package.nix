@@ -118,7 +118,7 @@ buildDotnetModule rec {
       name = pname;
       exec = meta.mainProgram;
       icon = pname;
-      desktopName = "Space Station 14 Launcher";
+      desktopName = "SanabiLauncher";
       comment = meta.description;
       categories = [ "Game" ];
       startupWMClass = meta.mainProgram;

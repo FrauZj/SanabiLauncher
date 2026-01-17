@@ -1,3 +1,3 @@
-"Space Station 14 Launcher.exe" --debug
+"SanabiLauncher.exe" --debug
 
 PAUSE

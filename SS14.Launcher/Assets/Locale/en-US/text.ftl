@@ -154,7 +154,7 @@ login-confirmation-busy = Logging in…
 
 ## Strings for the general main window layout of the launcher
 
-main-window-title = Space Station 14 Launcher
+main-window-title = SanabiLauncher
 main-window-header-link-discord = Discord
 main-window-header-link-website = Website
 main-window-out-of-date = Launcher out of date

@@ -175,7 +175,7 @@ login-forgot-success-title = Το email επαναφοράς έχει σταλε
 # Strings for the "login" view on login
 login-login-busy-logging-in = Γίνετε σύνδεση…
 # Strings for the general main window layout of the launcher
-main-window-title = Space Station 14 Launcher
+main-window-title = SanabiLauncher
 # Long region names for server tag filters (shown in tooltip)
 region-asia-south-east = Νοτιοανατολική Ασία
 # Long region names for server tag filters (shown in tooltip)

@@ -190,7 +190,7 @@ main-window-error-unknown = Tunematon virhe
 # Strings for the general main window layout of the launcher
 main-window-drag-drop-prompt = Pudota käynnistääksesi pelin
 # Strings for the general main window layout of the launcher
-main-window-title = Space Station 14 Launcher
+main-window-title = SanabiLauncher
 # Long region names for server tag filters (shown in tooltip)
 region-middle-east = Lähi-Itä
 # Long region names for server tag filters (shown in tooltip)

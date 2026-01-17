@@ -205,7 +205,7 @@ filters-18-no = Nee
 # Strings for the server filters menu
 filters-18-no-desc = Nee
 # Strings for the general main window layout of the launcher
-main-window-title = Space Station 14 Launcher
+main-window-title = SanabiLauncher
 # Strings for the general main window layout of the launcher
 main-window-header-link-discord = Discord
 # Strings for the general main window layout of the launcher

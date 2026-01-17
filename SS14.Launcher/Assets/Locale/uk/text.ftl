@@ -206,7 +206,7 @@ login-login-busy-logging-in = Вхід…
 # Strings for the "login" view on login
 login-login-error-title = Не вдалося увійти
 # Strings for the general main window layout of the launcher
-main-window-title = Space Station 14 Launcher
+main-window-title = SanabiLauncher
 # Strings for the general main window layout of the launcher
 main-window-header-link-discord = Discord
 # Strings for the "hub settings" dialog window.

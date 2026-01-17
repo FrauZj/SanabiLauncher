@@ -195,7 +195,7 @@ login-login-busy-logging-in = Giriş yapılıyor…
 # Strings for the "login" view on login
 login-login-error-title = Giriş yapılamıyor
 # Strings for the general main window layout of the launcher
-main-window-title = Space Station 14 Launcher
+main-window-title = SanabiLauncher
 # Strings for the general main window layout of the launcher
 main-window-header-link-discord = Discord
 # Strings for the general main window layout of the launcher

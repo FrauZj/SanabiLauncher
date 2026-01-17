@@ -113,7 +113,7 @@ login-forgot-success-title = Helyreállító email elküldve
 login-login-show-password = Jelszó Megjelenítése
 login-confirmation-confirmation-message = Kérlek ellenőrizd az email címed a fiókod megerősítéséhez. Miután megerősítetted a fiókod, kattints a bejelentkezés alatti gombra.
 login-confirmation-confirmation-title = Regisztráció megerősítése
-main-window-title = Space Station 14 Launcher
+main-window-title = SanabiLauncher
 main-window-header-link-website = Weboldal
 main-window-out-of-date-desc =
     Ez a Launcher elavult.
