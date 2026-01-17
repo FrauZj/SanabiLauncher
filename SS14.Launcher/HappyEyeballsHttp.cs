@@ -91,7 +91,7 @@ public static class HappyEyeballsHttp
         }
         catch
         {
-            Log.Fatal($"Totally failed to connect {endPoint} to any address; no valid ones were found.");
+            Log.Error($"Totally failed to connect {endPoint} to any address; no valid ones were found.");
             throw;
         }
     }
