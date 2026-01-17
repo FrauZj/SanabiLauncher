@@ -95,7 +95,7 @@ public static class AssemblyLoadingManager
         var index = 0;
         while (_assembliesPendingLoad.TryDequeue(out var assembly))
         {
-            if (GetIsModEnabled(SanabiConfig.ProcessConfig.LoadedExternalModsFlags, index++))
+            if (!GetIsModEnabled(SanabiConfig.ProcessConfig.LoadedExternalModsFlags, index++))
                 continue;
 
             LoadModAssembly(ref __instance, assembly);
