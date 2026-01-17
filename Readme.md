@@ -12,7 +12,7 @@ Features include:
 - Gives you access to tent for camouflage against drones
 - - Account tokens are updated only for individual accounts, and only when they are in use
   - You can use the launcher when logged-out as if you are logged in
-  - Option to start the launcher from the login page if you don't want to fetch statuses of servers on favourites tab for whatever reason
+  - Option to start the launcher from the login page if you don't want to fetch statuses of servers on favourites tab and hubserver for whatever reason
   - Allows you to change the default hub API used for the server tabs (however it defaults to the [wizden hub *mirror*](https://github.com/LaCumbiaDelCoronavirus/SanabiLauncher/blob/9d340ad0998191e7b3b7f21a19bca162e6679af9/SS14.Launcher/ConfigConstants.cs#L43-L49))
   - Per-account settings; you can have settings be different values for specific accounts
   - - Account seed:
