@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using Serilog;
 
@@ -36,11 +37,12 @@ public sealed class LauncherInfoManager(HttpClient httpClient)
 
     private async Task LoadData()
     {
+        var cancellationToken = new CancellationTokenSource(2200).Token;
         LauncherInfoModel? info;
         try
         {
             Log.Debug("Loading launcher info... {Url}", ConfigConstants.UrlLauncherInfo);
-            info = await ConfigConstants.UrlLauncherInfo.GetFromJsonAsync<LauncherInfoModel>(httpClient);
+            info = await ConfigConstants.UrlLauncherInfo.GetFromJsonAsync<LauncherInfoModel>(httpClient, cancel: cancellationToken);
             if (info == null)
             {
                 Log.Warning("Launcher info response was null.");
