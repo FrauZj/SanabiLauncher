@@ -185,7 +185,7 @@
                   Content="Start launcher on login menu"/>
         <TextBlock VerticalAlignment="Center"
                    TextWrapping="Wrap"
-                   Text="Should the launcher start on the login menu (where no external API has yet been queried) or on the homepage (where hub API is likely to be queried). Turning this on can help against detection if you know what you are doing."
+                   Text="Should the launcher start on the login menu (where no external API has yet been queried) or on the homepage (where hub API is likely to be queried). Useless 98% of the time."
                    Margin="8"/>
 
       </StackPanel>

@@ -95,6 +95,13 @@ public class AccountDropDownViewModel : ViewModelBase
     }
 
     [UsedImplicitly]
+    public void UseNoAccountPressed()
+    {
+        IsDropDownOpen = false;
+        _loginMgr.SetActiveAccount(null);
+    }
+
+    [UsedImplicitly]
     public void AccountButtonPressed(object account)
     {
         if (account is not LoggedInAccount loggedInAccount)

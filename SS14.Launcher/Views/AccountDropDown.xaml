@@ -6,8 +6,8 @@
              xmlns:v="clr-namespace:SS14.Launcher.Views"
              xmlns:loc="clr-namespace:SS14.Launcher.Localization"
              mc:Ignorable="d"
-    d:DesignWidth="800"
-    d:DesignHeight="450"
+             d:DesignWidth="800"
+             d:DesignHeight="450"
              x:Class="SS14.Launcher.Views.AccountDropDown">
 
   <Design.DataContext>
@@ -15,17 +15,22 @@
   </Design.DataContext>
 
   <v:DropDown HeaderContent="{Binding LoginText}"
-      IsDropDownOpen="{Binding IsDropDownOpen, Mode=TwoWay}"
-      Classes="OpenRight">
+              IsDropDownOpen="{Binding IsDropDownOpen, Mode=TwoWay}"
+              Classes="OpenRight">
     <Panel>
       <v:AngleBox Fill="{DynamicResource ThemePopupBackgroundBrush}"
-          SideStyle="OpenRight"/>
+                  SideStyle="OpenRight"/>
       <StackPanel Orientation="Vertical">
         <StackPanel Orientation="Vertical"
-            IsVisible="{Binding AccountControlsVisible}">
+                    IsVisible="{Binding AccountControlsVisible}">
           <Button Content="{Binding LogoutText}"
-              Command="{Binding LogoutPressed}"
-              Margin="4"/>
+                  Command="{Binding LogoutPressed}"
+                  Margin="4"/>
+          <Button Content="Switch to no account"
+                  Command="{Binding UseNoAccountPressed}"
+                  Margin="4"/>
+          <Separator Classes="horizontal"
+                     Margin="0,5,0,5"/>
         </StackPanel>
         <Button Content="{loc:Loc account-drop-down-add-account}"
                 IsVisible="{Binding EnableMultiAccounts}"
@@ -33,16 +38,16 @@
                 Margin="4"/>
 
         <StackPanel Orientation="Vertical"
-            IsVisible="{Binding AccountSwitchVisible}">
+                    IsVisible="{Binding AccountSwitchVisible}">
           <TextBlock Text="{Binding AccountSwitchText}"
-              Margin="4"/>
+                     Margin="4"/>
 
           <ItemsControl Name="Items"
-              ItemsSource="{Binding Accounts}">
+                        ItemsSource="{Binding Accounts}">
             <ItemsControl.ItemTemplate>
               <DataTemplate DataType="vm:AvailableAccountViewModel">
                 <Button Content="{Binding StatusText}"
-                    Margin="4"
+                        Margin="4"
                         Command="{Binding #Items.DataContext.AccountButtonPressed}"
                         CommandParameter="{Binding Account}"/>
               </DataTemplate>

@@ -84,6 +84,7 @@ public class MainWindowLoginViewModel : ViewModelBase
         });
     }
 
+    // Binding; do not rename/remove/change signature
     public void JustHideLoginMenu()
     {
         _mainVm.SetLoginMenuShowing(false);

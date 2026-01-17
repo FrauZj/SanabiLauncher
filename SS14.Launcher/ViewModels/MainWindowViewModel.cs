@@ -88,6 +88,8 @@ public sealed class MainWindowViewModel : ViewModelBase, IErrorOverlayOwner
         {
             TrySwitchToAccount(loginData);
         }
+
+        _loginMgr.AfterActiveAccountUpdate += (_) => SelectedIndex = 0;
     }
 
     private static bool _didStartingInit = false;
