@@ -27,6 +27,7 @@ public class AccountDropDownViewModel : ViewModelBase
     public ReadOnlyObservableCollection<AvailableAccountViewModel> Accounts => _accounts;
 
     public bool EnableMultiAccounts => _cfg.ActuallyMultiAccounts;
+    public bool AnyAccountsPresent => _loginMgr.Logins.Count != 0;
 
     public AccountDropDownViewModel(MainWindowViewModel mainVm)
     {
@@ -49,6 +50,7 @@ public class AccountDropDownViewModel : ViewModelBase
         {
             this.RaisePropertyChanged(nameof(LogoutText));
             this.RaisePropertyChanged(nameof(AccountSwitchVisible));
+            this.RaisePropertyChanged(nameof(AnyAccountsPresent));
         });
 
         var filterObservable = this.WhenAnyValue(x => x._loginMgr.ActiveAccount)
@@ -60,6 +62,8 @@ public class AccountDropDownViewModel : ViewModelBase
             .Transform(p => new AvailableAccountViewModel(p))
             .Bind(out _accounts)
             .Subscribe();
+
+        this.RaisePropertyChanged(nameof(AnyAccountsPresent));
     }
 
     private static Func<LoggedInAccount?, bool> MakeFilter(LoggedInAccount? selected)

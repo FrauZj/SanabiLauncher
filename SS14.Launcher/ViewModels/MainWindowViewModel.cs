@@ -75,9 +75,6 @@ public sealed class MainWindowViewModel : ViewModelBase, IErrorOverlayOwner
             this.RaisePropertyChanged(nameof(ShowLoginMenu));
         };
 
-        _cfg.Logins.Connect()
-            .Subscribe(_ => { this.RaisePropertyChanged(nameof(AccountDropDownVisible)); });
-
         SetLoginMenuShowing(_cfg.GetCVar(SanabiCVars.StartOnLoginMenu));
     }
 
@@ -89,7 +86,11 @@ public sealed class MainWindowViewModel : ViewModelBase, IErrorOverlayOwner
             TrySwitchToAccount(loginData);
         }
 
-        _loginMgr.AfterActiveAccountUpdate += (_) => SelectedIndex = 0;
+        _loginMgr.AfterActiveAccountUpdate += (_) =>
+        {
+            SelectedIndex = 0;
+            SetLoginMenuShowing(false);
+        };
     }
 
     private static bool _didStartingInit = false;
@@ -152,7 +153,6 @@ public sealed class MainWindowViewModel : ViewModelBase, IErrorOverlayOwner
     [Reactive] public bool ShowLoginMenu { get; set; }
     public bool LoggedIn => _loginMgr.ActiveAccount != null;
     private string? Username => _loginMgr.ActiveAccount?.Username;
-    public bool AccountDropDownVisible => _loginMgr.Logins.Count != 0;
 
     public AccountDropDownViewModel AccountDropDown { get; }
 

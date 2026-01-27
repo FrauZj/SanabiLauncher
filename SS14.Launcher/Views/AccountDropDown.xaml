@@ -40,6 +40,7 @@
         <StackPanel Orientation="Vertical"
                     IsVisible="{Binding AccountSwitchVisible}">
           <TextBlock Text="{Binding AccountSwitchText}"
+                     IsVisible="{Binding AnyAccountsPresent}"
                      Margin="4"/>
 
           <ItemsControl Name="Items"

@@ -50,7 +50,6 @@
             <v:AccountDropDown Grid.Column="0"
                                Margin="0, 0, 2, 0"
                                MinWidth="90"
-                               IsEnabled="{Binding $parent.DataContext.AccountDropDownVisible}"
                                DataContext="{Binding AccountDropDown}"/>
 
             <!-- Discord link -->
