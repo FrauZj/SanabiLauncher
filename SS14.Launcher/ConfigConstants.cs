@@ -40,6 +40,7 @@ public static class ConfigConstants
     /// <summary>
     ///     Mirror wizden hub URL(s).
     /// </summary>
+    // insanity
     public static readonly Uri[] MirrorHubUrls =
     [
         new("https://hub.simplestation.org/"),

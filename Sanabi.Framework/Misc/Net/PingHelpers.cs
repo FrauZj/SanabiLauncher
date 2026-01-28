@@ -124,7 +124,7 @@ public static class NetHelpers
     /// <summary>
     ///     Pings a given address with a <see cref="UdpClient"/>. Will use the
     ///         server port specified by the address, or default if none is specified.
-    /// 
+    ///
     ///     Gets the high-enough-resolution timespan of the RTT from the client to target.
     /// </summary>
     /// <returns>Returns whether the ping succeeded (didn't time-out), and the RTT.</returns>
@@ -160,7 +160,7 @@ public static class NetHelpers
     /// <summary>
     ///     Pings a given address with a <see cref="TcpClient"/>. Will use the
     ///         server port specified by the address, or default if none is specified.
-    /// 
+    ///
     ///     Gets the high-enough-resolution timespan of the RTT from the client to target.
     /// </summary>
     /// <returns>Returns whether the ping succeeded (didn't time-out), and the RTT.</returns>
@@ -197,7 +197,7 @@ public static class NetHelpers
     /// <summary>
     ///     Pings a given HTTP(S) URI with a <see cref="HttpClient"/>. Must
     ///         specify a port.
-    /// 
+    ///
     ///     Gets the high-enough-resolution timespan of the RTT from the client to target.
     /// </summary>
     /// <returns>Returns whether the ping succeeded (didn't time-out), and the RTT.</returns>

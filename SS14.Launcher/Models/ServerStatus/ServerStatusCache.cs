@@ -90,6 +90,8 @@ public sealed class ServerStatusCache : IServerSource
             var statusAddr = UriHelper.GetServerStatusAddress(parsedAddress);
             data.Status = ServerStatusCode.FetchingStatus;
 
+            _ = data.UpdateTrueIp();
+
             ServerApi.ServerStatus status;
             try
             {

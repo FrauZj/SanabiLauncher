@@ -13,7 +13,6 @@ using ReactiveUI.Fody.Helpers;
 using SS14.Launcher.Api;
 using SS14.Launcher.Models.Data;
 using static SS14.Launcher.Api.HubApi;
-using Sanabi.Framework.Data;
 using SS14.Launcher.ViewModels;
 
 namespace SS14.Launcher.Models.ServerStatus;
@@ -30,6 +29,8 @@ public sealed class ServerListCache : ReactiveObject, IServerSource
 
     public ObservableCollection<ServerStatusData> AllServers => _allServers;
     private readonly ServerListCollection _allServers = new();
+
+    private HashSet<string> _allServerAddressList = new();
 
     [Reactive]
     public RefreshListStatus Status { get; private set; } = RefreshListStatus.NotUpdated;
@@ -65,6 +66,7 @@ public sealed class ServerListCache : ReactiveObject, IServerSource
     public async void RefreshServerList(CancellationToken cancel)
     {
         _allServers.Clear();
+        _allServerAddressList.Clear();
         Status = RefreshListStatus.UpdatingMaster;
 
         try
@@ -118,13 +120,17 @@ public sealed class ServerListCache : ReactiveObject, IServerSource
                 {
                     // Don't add server if it was already provided by another hub with higher priority
                     var maybeNewEntry = new HubServerListEntry(entry.Address, hub.AbsoluteUri, entry.StatusData);
-                    if (!entries.Add(maybeNewEntry))
+                    if (!_allServerAddressList.Add(entry.Address))
                     {
                         Log.Verbose("Not adding {Entry} from {ThisHub} because it was already provided by {PreviousHub}",
                             entry.Address,
                             hub.AbsoluteUri,
                             maybeNewEntry.HubAddress);
+
+                        continue;
                     }
+
+                    entries.Add(maybeNewEntry);
                 }
             }
 

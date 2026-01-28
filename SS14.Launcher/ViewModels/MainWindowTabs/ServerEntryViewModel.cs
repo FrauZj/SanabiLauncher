@@ -27,6 +27,8 @@ public sealed class ServerEntryViewModel : ObservableRecipient, IRecipient<Favor
         _windowVm = windowVm;
         _cacheData = cacheData;
         _serverSource = serverSource;
+
+        cacheData.TrueAddressUpdateCallback += () => OnPropertyChanged(nameof(TrueAddress));
     }
 
     public ServerEntryViewModel(
@@ -156,22 +158,20 @@ public sealed class ServerEntryViewModel : ObservableRecipient, IRecipient<Favor
 
     public ServerStatusData CacheData => _cacheData;
 
+    public string ViewedAddress => $"Advertised address: {_cacheData.Address}";
+    public string TrueAddress => $"Host address: {_cacheData.TrueAddress}";
+
     public string? FetchedFrom
     {
         get
         {
-            if (_cfg.HasCustomHubs)
-            {
-                return _cacheData.HubAddress == null
-                    ? null
-                    : _loc.GetString("server-fetched-from-hub", ("hub", GetHubShortName(_cacheData.HubAddress)));
-            }
-
-            return null;
+            return _cacheData.HubAddress == null
+                ? "N/A (This is a bug!)"
+                : _loc.GetString("server-fetched-from-hub", ("hub", GetHubShortName(_cacheData.HubAddress)));
         }
     }
 
-    public bool ShowFetchedFrom => _cfg.HasCustomHubs && !ViewedInFavoritesPane;
+    public bool ShowFetchedFrom => /*_cfg.HasCustomHubs && */!ViewedInFavoritesPane;
 
     public void FavoriteButtonPressed()
     {
@@ -210,6 +210,8 @@ public sealed class ServerEntryViewModel : ObservableRecipient, IRecipient<Favor
     {
         if (!IsExpanded || _cacheData.Status != ServerStatusCode.Online)
             return;
+
+        _ = _cacheData.UpdateTrueIp();
 
         if (_cacheData.StatusInfo is not (ServerStatusInfoCode.NotFetched or ServerStatusInfoCode.Error))
             return;

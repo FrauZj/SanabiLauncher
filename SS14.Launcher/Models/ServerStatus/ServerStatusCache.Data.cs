@@ -1,5 +1,7 @@
 using System;
+using System.Net;
 using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 
 namespace SS14.Launcher.Models.ServerStatus;
@@ -29,6 +31,45 @@ public sealed class ServerStatusData : ObservableObject, IServerStatusData
         HubAddress = hubAddress;
     }
 
+    public async Task UpdateTrueIp()
+    {
+        // not dns
+        if (!Uri.TryCreate(Address, UriKind.Absolute, out var uri))
+            return;
+
+        TrueAddress = "Fetching…";
+
+        IPAddress[]? trueAddresses = null;
+        using (var linkedToken = new CancellationTokenSource(2500))
+            trueAddresses = await Dns.GetHostAddressesAsync(uri.Host, linkedToken.Token);
+
+        if (trueAddresses == null)
+        {
+            TrueAddress = "Unknown (try refreshing)";
+            goto doUpdate;
+        }
+
+        if (trueAddresses.Length == 0)
+        {
+            TrueAddress = "N/A";
+            goto doUpdate;
+        }
+
+        if (uri.Port == -1)
+            TrueAddress = $"{trueAddresses[0]}:{Global.DefaultServerPort} [unspecified port; defaulting to {Global.DefaultServerPort}]";
+        else
+            TrueAddress = $"{trueAddresses[0]}:{uri.Port}";
+
+        TrueAddressResolved = true;
+
+    doUpdate:
+        TrueAddressUpdateCallback?.Invoke();
+        return;
+    }
+
+    public Action? TrueAddressUpdateCallback = null;
+    public bool TrueAddressResolved = false;
+    public string TrueAddress = "Fetching…"; // Actual IP, where Address can just point to a site, this points to the host. Resolved when fetching server status
     public string Address { get; }
     public string? HubAddress { get; }
 
