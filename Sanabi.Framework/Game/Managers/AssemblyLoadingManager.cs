@@ -17,6 +17,7 @@ public static class AssemblyLoadingManager
 {
     public static int TotalExternalModCount = 0;
     private static readonly Queue<Assembly> _assembliesPendingLoad = new(); // Important to be Queue rather than Stack to preserve order of assemblies
+    private static readonly Queue<MethodInfo> _pendingEntSysManUpdateCallbacks = new();
     private static MethodInfo _modInitMethod = default!;
 
     /// <summary>
@@ -70,7 +71,7 @@ public static class AssemblyLoadingManager
             return;
 
         var internalModLoader = ReflectionManager.GetTypeByQualifiedName("Robust.Shared.ContentPack.ModLoader");
-        var baseModLoader = ReflectionManager.GetTypeByQualifiedName("Robust.Shared.ContentPack.BaseModLoader ");
+        var baseModLoader = ReflectionManager.GetTypeByQualifiedName("Robust.Shared.ContentPack.BaseModLoader");
 
         _modInitMethod = PatchHelpers.GetMethod(internalModLoader, "InitMod")
             ?? throw new InvalidOperationException("Couldn't resolve BaseModLoader.InitMod!");
@@ -79,6 +80,13 @@ public static class AssemblyLoadingManager
             internalModLoader,
             "TryLoadModules",
             ModLoaderPostfix,
+            HarmonyPatchType.Postfix
+        );
+
+        PatchHelpers.PatchMethod(
+            ReflectionManager.GetTypeByQualifiedName("Robust.Shared.GameObjects.EntitySystemManager"),
+            "Initialize",
+            EntSysManInitPostfix,
             HarmonyPatchType.Postfix
         );
 
@@ -102,15 +110,18 @@ public static class AssemblyLoadingManager
         }
     }
 
+    private static void EntSysManInitPostfix()
+    {
+        while (_pendingEntSysManUpdateCallbacks.TryDequeue(out var callbackInfo))
+            callbackInfo.Invoke(null, null);
+    }
+
     /// <summary>
-    ///     Tries to get the entry point for a mod assembly.
+    ///     Tries to get the entry point type for a mod assembly.
     ///         This is compatible with Marsey patches.
     /// </summary>
-    public static MethodInfo? GetModAssemblyEntryPoint(Assembly assembly)
-    {
-        var entryPointType = assembly.GetType("PatchEntry") ?? assembly.GetType("ModEntry") ?? assembly.GetType("EntryPoint") ?? assembly.GetType("MarseyEntry");
-        return entryPointType?.GetMethod("Entry", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public);
-    }
+    public static Type? GetModAssemblyEntryType(Assembly assembly)
+        => assembly.GetType("PatchEntry") ?? assembly.GetType("ModEntry") ?? assembly.GetType("MarseyEntry");
 
     private static void LogDelegate(AssemblyName asm, string message)
     {
@@ -141,7 +152,13 @@ public static class AssemblyLoadingManager
 
         _modInitMethod.Invoke(modLoader, (Assembly[])[modAssembly]);
 
-        if (GetModAssemblyEntryPoint(modAssembly) is { } modEntry)
-            Enter(modEntry, async: false); // Non-async makes it possible to debug
+        if (GetModAssemblyEntryType(modAssembly) is { } modEntryType)
+        {
+            if (modEntryType?.GetMethod("Entry", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public) is { } modEntryMethod)
+                Enter(modEntryMethod, async: false); // Non-async makes it possible to debug
+
+            if (modEntryType?.GetMethod("OnEntitySystemsLoaded", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public) is { } entitySystemsLoadedMethod)
+                _pendingEntSysManUpdateCallbacks.Enqueue(entitySystemsLoadedMethod);
+        }
     }
 }
