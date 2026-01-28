@@ -26,7 +26,7 @@ public static class AssemblyManager
     /// <summary>
     ///     Located assemblies.
     /// </summary>
-    public static readonly Dictionary<string, Assembly?> Assemblies = new();
+    public static readonly Dictionary<string, Assembly> Assemblies = new();
 
     /// <summary>
     ///     Called once when every necessary assembly has
