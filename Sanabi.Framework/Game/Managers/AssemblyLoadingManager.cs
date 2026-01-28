@@ -108,7 +108,7 @@ public static class AssemblyLoadingManager
     /// </summary>
     public static MethodInfo? GetModAssemblyEntryPoint(Assembly assembly)
     {
-        var entryPointType = assembly.GetType("PatchEntry") ?? assembly.GetType("EntryPoint") ?? assembly.GetType("MarseyEntry");
+        var entryPointType = assembly.GetType("PatchEntry") ?? assembly.GetType("ModEntry") ?? assembly.GetType("EntryPoint") ?? assembly.GetType("MarseyEntry");
         return entryPointType?.GetMethod("Entry", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public);
     }
 
@@ -142,6 +142,6 @@ public static class AssemblyLoadingManager
         _modInitMethod.Invoke(modLoader, (Assembly[])[modAssembly]);
 
         if (GetModAssemblyEntryPoint(modAssembly) is { } modEntry)
-            Enter(modEntry, async: true);
+            Enter(modEntry, async: false); // Non-async makes it possible to debug
     }
 }
