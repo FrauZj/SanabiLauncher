@@ -157,7 +157,7 @@ public static class AssemblyLoadingManager
             if (modEntryType?.GetMethod("Entry", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public) is { } modEntryMethod)
                 Enter(modEntryMethod, async: false); // Non-async makes it possible to debug
 
-            if (modEntryType?.GetMethod("OnEntitySystemsLoaded", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public) is { } entitySystemsLoadedMethod)
+            if (modEntryType?.GetMethod("AfterEntitySystemsLoaded", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public) is { } entitySystemsLoadedMethod)
                 _pendingEntSysManUpdateCallbacks.Enqueue(entitySystemsLoadedMethod);
         }
     }
