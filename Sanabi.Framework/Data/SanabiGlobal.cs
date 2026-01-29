@@ -17,6 +17,22 @@ public static class SanabiGlobal
     /// </summary>
     public const int MinimumSuccessfulPingQueryAttempts = 2;
 
+    // Do not indent
+    // Do not make const
+    public const string FallbackLauncherInfoData = """
+{
+  "messages": {
+    "en-US": [
+      "rnd_krik2.ogg [your launcher didn't load properly btw]"
+    ]
+  },
+  "allowedVersions": [
+    "220"
+  ],
+  "overrideAssets": {}
+}
+""";
+
     /// <summary>
     ///     Amount of time to pass between ping queries.
     /// </summary>

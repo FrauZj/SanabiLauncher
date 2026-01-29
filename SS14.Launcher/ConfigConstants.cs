@@ -76,7 +76,8 @@ public static class ConfigConstants
     // TODO: Take this from Cache-Control header responses instead.
     public static readonly TimeSpan RobustManifestCacheTime = TimeSpan.FromMinutes(15);
 
-    public static readonly UrlFallbackSet UrlLauncherInfo = new(["https://pastebin.com/raw/cfhs4F0N"]);
+    // TOP 10 DEPENDENCIES
+    public static readonly UrlFallbackSet UrlLauncherInfo = new(["https://pastebin.com/raw/u0JYgB0J"]);
     public static readonly UrlFallbackSet UrlAssetsBase = LauncherDataBaseUrl + "assets/";
 
     public const string FallbackUsername = "CombatBot";

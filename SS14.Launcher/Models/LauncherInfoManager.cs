@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using Sanabi.Framework.Data;
 using Serilog;
 
 namespace SS14.Launcher.Models;
@@ -48,16 +50,17 @@ public sealed class LauncherInfoManager(HttpClient httpClient)
                 Log.Warning("Launcher info response was null.");
                 return;
             }
+
         }
         catch (Exception e)
         {
-            Log.Warning(e, "Loading launcher info failed");
-            return;
+            Log.Error($"Failed to load launcher info! Using fallback. Exception: {e}");
+            info = JsonSerializer.Deserialize<LauncherInfoModel>(SanabiGlobal.FallbackLauncherInfoData, options: JsonSerializerOptions.Web);
         }
 
         // This is future-proofed to support multiple languages,
         // but for now the launcher only supports English so it'll have to do.
-        info.Messages.TryGetValue("en-US", out _messages);
+        info!.Messages.TryGetValue("en-US", out _messages);
 
         _model = info;
     }
