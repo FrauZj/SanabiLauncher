@@ -53,7 +53,6 @@ public sealed class ServerStatusData : ObservableObject, IServerStatusData
         // Update ping
         if (uri != null)
         {
-            const int maxAttempts = 5;
             var lastStatus = IPStatus.Unknown;
 
             var successfulAttempts = 0;
@@ -62,8 +61,10 @@ public sealed class ServerStatusData : ObservableObject, IServerStatusData
             DisplayedPing = "Fetching…";
             MiscDataUpdateCallback?.Invoke();
 
-            for (var failedAttempts = 0; failedAttempts < maxAttempts; failedAttempts++)
+            for (var failedAttempts = 0; failedAttempts < SanabiGlobal.MaximumPingQueryAttempts; failedAttempts++)
             {
+                await Task.Delay(SanabiGlobal.PingQueryInterval);
+
                 // This could definitely use averaging out the ping over multiple attempts
                 var (newStatus, timeSpent) = await TryPing(uri);
                 lastStatus = newStatus;
@@ -77,10 +78,10 @@ public sealed class ServerStatusData : ObservableObject, IServerStatusData
                 }
             }
 
-            if (successfulAttempts == 0)
-                DisplayedPing = $"ERR [IPStatus: {lastStatus}] [server does not support ICMP pings or you have no Internet access]";
+            if (successfulAttempts <= SanabiGlobal.MinimumSuccessfulPingQueryAttempts)
+                DisplayedPing = $"ERR [IPStatus: {lastStatus}] [{successfulAttempts} pings succeeded, at least {SanabiGlobal.MinimumSuccessfulPingQueryAttempts} successful pings were required]";
             else
-                DisplayedPing = $"avg. {totalSuccessfulMilliseconds / successfulAttempts}ms [{successfulAttempts}/{maxAttempts} successful attempts]";
+                DisplayedPing = $"avg. {totalSuccessfulMilliseconds / successfulAttempts}ms [{successfulAttempts}/{SanabiGlobal.MaximumPingQueryAttempts} successful pings]";
         }
         else
             DisplayedPing = "ERR [bad URI]";

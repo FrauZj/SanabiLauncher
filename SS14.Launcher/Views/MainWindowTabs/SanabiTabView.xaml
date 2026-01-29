@@ -194,7 +194,7 @@
                   Content="Ping servers in dropdown"/>
         <TextBlock VerticalAlignment="Center"
                    TextWrapping="Wrap"
-                   Text="Should server ping be determined when opening their dropdown? Some ABSOLUTELY 'SESSED servers might use this to detect you."
+                   Text="Should server ping be determined when opening their dropdown? Some ABSOLUTELY 'SESSED servers might use this to detect you. Note that not all servers will support being pinged via ICMP, so most of those which don't accept ICMP pings will usually give TimedOut as the error reason."
                    Margin="8"/>
 
       </StackPanel>
