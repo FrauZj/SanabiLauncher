@@ -78,8 +78,8 @@ public sealed class ServerStatusData : ObservableObject, IServerStatusData
                 }
             }
 
-            if (successfulAttempts <= SanabiGlobal.MinimumSuccessfulPingQueryAttempts)
-                DisplayedPing = $"ERR [IPStatus: {lastStatus}] [{successfulAttempts} pings succeeded, at least {SanabiGlobal.MinimumSuccessfulPingQueryAttempts} successful pings were required]";
+            if (successfulAttempts < SanabiGlobal.MinimumSuccessfulPingQueryAttempts)
+                DisplayedPing = $"ERR [IPStatus: {lastStatus}] [{successfulAttempts} pings succeeded, but at least {SanabiGlobal.MinimumSuccessfulPingQueryAttempts} successful pings were required]";
             else
                 DisplayedPing = $"avg. {totalSuccessfulMilliseconds / successfulAttempts}ms [{successfulAttempts}/{SanabiGlobal.MaximumPingQueryAttempts} successful pings]";
         }
