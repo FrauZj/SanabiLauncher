@@ -28,7 +28,11 @@ public sealed class ServerEntryViewModel : ObservableRecipient, IRecipient<Favor
         _cacheData = cacheData;
         _serverSource = serverSource;
 
-        cacheData.TrueAddressUpdateCallback += () => OnPropertyChanged(nameof(TrueAddress));
+        cacheData.MiscDataUpdateCallback += () =>
+        {
+            OnPropertyChanged(nameof(TrueAddress));
+            OnPropertyChanged(nameof(DisplayedPing));
+        };
     }
 
     public ServerEntryViewModel(
@@ -113,7 +117,7 @@ public sealed class ServerEntryViewModel : ObservableRecipient, IRecipient<Favor
 
     public DateTime? RoundStartTime => _cacheData.RoundStartTime;
 
-    public string PingString => _cacheData.Ping == null ? "T/O" : $"{_cacheData.Ping.Value.Milliseconds}ms";
+    //public string PingString => _cacheData.Ping == null ? "T/O" : $"{_cacheData.Ping.Value.Milliseconds}ms";
 
     public string RoundStatusString =>
         _cacheData.RoundStatus == GameRoundStatus.InLobby
@@ -160,6 +164,7 @@ public sealed class ServerEntryViewModel : ObservableRecipient, IRecipient<Favor
 
     public string ViewedAddress => $"Advertised address: {_cacheData.Address}";
     public string TrueAddress => $"Host address: {_cacheData.TrueAddress}";
+    public string DisplayedPing => $"Estimated ping: {_cacheData.DisplayedPing}";
 
     public string? FetchedFrom
     {
@@ -211,7 +216,7 @@ public sealed class ServerEntryViewModel : ObservableRecipient, IRecipient<Favor
         if (!IsExpanded || _cacheData.Status != ServerStatusCode.Online)
             return;
 
-        _ = _cacheData.UpdateTrueIp();
+        _ = _cacheData.UpdateMiscData();
 
         if (_cacheData.StatusInfo is not (ServerStatusInfoCode.NotFetched or ServerStatusInfoCode.Error))
             return;
@@ -245,10 +250,6 @@ public sealed class ServerEntryViewModel : ObservableRecipient, IRecipient<Favor
 
             case nameof(IServerStatusData.RoundStartTime):
                 OnPropertyChanged(nameof(RoundStartTime));
-                break;
-
-            case nameof(IServerStatusData.Ping):
-                OnPropertyChanged(nameof(PingString));
                 break;
 
             case nameof(IServerStatusData.RoundStatus):

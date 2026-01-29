@@ -90,7 +90,7 @@ public sealed class ServerStatusCache : IServerSource
             var statusAddr = UriHelper.GetServerStatusAddress(parsedAddress);
             data.Status = ServerStatusCode.FetchingStatus;
 
-            _ = data.UpdateTrueIp();
+            _ = data.UpdateMiscData();
 
             ServerApi.ServerStatus status;
             try
@@ -128,7 +128,6 @@ public sealed class ServerStatusCache : IServerSource
         data.Name = status.Name;
         data.PlayerCount = Math.Max(0, status.PlayerCount);
         data.SoftMaxPlayerCount = Math.Max(0, status.SoftMaxPlayerCount);
-        data.Ping = roundTripTime;
 
         switch (status.RunLevel)
         {

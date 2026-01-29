@@ -22,6 +22,8 @@ public class SanabiTabViewModel : MainWindowTabViewModel
     {
         Cfg = Locator.Current.GetRequiredService<DataManager>();
         RefreshMods();
+
+        LazySanabiConfig.PingServers = Cfg.GetCVar(SanabiCVars.PingServers);
     }
 
     // Binding; do not rename/remove/change signature
@@ -145,6 +147,18 @@ public class SanabiTabViewModel : MainWindowTabViewModel
             }
 
             this.RaisePropertyChanged(propertyName: nameof(SpoofingSeedText));
+        }
+    }
+
+    public bool PingServers
+    {
+        get => Cfg.GetCVar(SanabiCVars.PingServers);
+        set
+        {
+            Cfg.SetCVar(SanabiCVars.PingServers, value);
+            Cfg.CommitConfig();
+
+            LazySanabiConfig.PingServers = value;
         }
     }
 

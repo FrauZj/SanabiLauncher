@@ -188,6 +188,15 @@
                    Text="Should the launcher start on the login menu (where no external API has yet been queried) or on the homepage (where hub API is likely to be queried). Useless 98% of the time."
                    Margin="8"/>
 
+        <CheckBox VerticalAlignment="Center"
+                  Margin="4"
+                  IsChecked="{Binding PingServers}"
+                  Content="Ping servers in dropdown"/>
+        <TextBlock VerticalAlignment="Center"
+                   TextWrapping="Wrap"
+                   Text="Should server ping be determined when opening their dropdown? Some ABSOLUTELY 'SESSED servers might use this to detect you."
+                   Margin="8"/>
+
       </StackPanel>
     </DockPanel>
   </ScrollViewer>

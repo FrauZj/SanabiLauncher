@@ -50,10 +50,17 @@ public static class NetHelpers
 
             var properties = netInterface.GetIPProperties();
             foreach (var address in properties.UnicastAddresses)
-                _ipv6Available |= address.Address.AddressFamily == AddressFamily.InterNetworkV6;
+            {
+                if (address.Address.AddressFamily != AddressFamily.InterNetworkV6)
+                    continue;
+
+                _ipv6Available = true;
+                break;
+            }
+
         }
 
-        SanabiLogger.LogFatal($"IPV6 Available: {(_ipv6Available ? "yes" : "no")}");
+        SanabiLogger.LogInfo($"IPV6 Available: {(_ipv6Available ? "yes" : "no")}");
     }
 
     /// <summary>
@@ -66,30 +73,34 @@ public static class NetHelpers
         _unavailableHosts.Clear();
     }
 
-    public static async Task<(bool, TimeSpan?)> TryPingIcmpAsync(string address)
+    public static async Task<(bool, TimeSpan?, IPStatus)> TryPingIcmpAsync(Uri uri)
     {
-        var uri = new Uri(address);
         using var ping = new Ping();
 
         try
         {
             var reply = await ping.SendPingAsync(uri.Host, PingTimeout);
             if (reply.Status == IPStatus.Success)
-                return (true, reply.RoundtripTime == 0 ? TimeSpan.Zero : TimeSpan.FromMilliseconds(reply.RoundtripTime));
+                return (true, reply.RoundtripTime == 0 ? TimeSpan.Zero : TimeSpan.FromMilliseconds(reply.RoundtripTime), reply.Status);
 
-            return (false, null);
+            SanabiLogger.LogWarn($"Non-successful ICMP ping reply pinging {uri}: {reply.Status}");
+            return (false, null, reply.Status);
         }
         catch (PingException)
         {
-            return (false, null);
+            return (false, null, IPStatus.Unknown);
         }
     }
+
+    public static async Task<(bool, TimeSpan?, IPStatus)> TryPingIcmpAsync(string address)
+        => await TryPingIcmpAsync(new Uri(address));
 
     /// <summary>
     ///     Tries to return the IP of this host, and whether the attempt to retrieve the IP succeeded.
     ///         Fails catastrophically (not actually) if the IP is IPV4, but IPV6 isn't supported.
     /// </summary>
-    public static async Task<IPAddress?> TryParseHostToIp(string host)
+    /// <param name="forgiving">If true, will not cache the IP as unavailable if retrieving it failed, nor will it use the cache to early-exit.</param>
+    public static async Task<IPAddress?> TryParseHostToIp(string host, bool forgiving = false)
     {
         if (IPAddress.TryParse(host, out var ip))
         {
@@ -99,14 +110,22 @@ public static class NetHelpers
             return ip;
         }
 
-        if (_unavailableHosts.Contains(host))
+        if (!forgiving &&
+            _unavailableHosts.Contains(host))
             return null;
 
         if (_cachedIps.TryGetValue(host, out var cachedIp))
             return cachedIp;
 
         // Try and get the first available IP and cache+return it
-        var ips = await Dns.GetHostAddressesAsync(host);
+
+        IPAddress[]? ips = null;
+        using (var linkedToken = new CancellationTokenSource(2500)) // timeout of 2.5sec
+            ips = await Dns.GetHostAddressesAsync(host);
+
+        if (ips == null)
+            goto unavailable;
+
         foreach (var foundIp in ips)
         {
             if (!_ipv6Available && foundIp.AddressFamily == AddressFamily.InterNetworkV6)
@@ -117,7 +136,10 @@ public static class NetHelpers
         }
 
         // No available IPs; mark host as unavailable for further use.
-        _unavailableHosts.Add(host);
+    unavailable:
+        if (!forgiving)
+            _unavailableHosts.Add(host);
+
         return null;
     }
 
@@ -128,9 +150,8 @@ public static class NetHelpers
     ///     Gets the high-enough-resolution timespan of the RTT from the client to target.
     /// </summary>
     /// <returns>Returns whether the ping succeeded (didn't time-out), and the RTT.</returns>
-    public static async Task<(bool, TimeSpan?)> TryPingUdpAsync(string address, int defaultPort)
+    public static async Task<(bool, TimeSpan?)> TryPingUdpAsync(Uri uri, int defaultPort)
     {
-        var uri = new Uri(address);
         var ip = await TryParseHostToIp(uri.Host);
         if (ip == null)
             return (false, null);
@@ -140,7 +161,7 @@ public static class NetHelpers
         var endpoint = new IPEndPoint(ip, port);
         using var udpClient = new UdpClient(ip.AddressFamily);
 
-        SanabiLogger.LogInfo($"Processing UDP: Host {uri.Host}, Port {port}, Realport {uri.Port}, IP {ip}, Address {address}");
+        SanabiLogger.LogInfo($"Processing UDP: Host {uri.Host}, Port {port}, Realport {uri.Port}, IP {ip}, Address {uri.Host}");
         var startTimestamp = Stopwatch.GetTimestamp();
 
         await udpClient.SendAsync(PingMessage, PingMessage.Length, endpoint);
@@ -164,32 +185,31 @@ public static class NetHelpers
     ///     Gets the high-enough-resolution timespan of the RTT from the client to target.
     /// </summary>
     /// <returns>Returns whether the ping succeeded (didn't time-out), and the RTT.</returns>
-    public static async Task<(bool, TimeSpan?)> TryPingTcpAsync(string address, int defaultPort)
+    public static async Task<(bool, TimeSpan?)> TryPingTcpAsync(Uri uri, int defaultPort)
     {
-        var uri = new Uri(address);
         var ip = await TryParseHostToIp(uri.Host);
         if (ip == null)
         {
-            SanabiLogger.LogInfo($"Bad TCP!! Host {uri.Host}, Realport {uri.Port}, IP {ip}, Address {address}");
+            SanabiLogger.LogInfo($"Bad TCP!! Host {uri.Host}, Realport {uri.Port}, IP {ip}, Address {uri.Host}");
             return (false, null);
         }
 
         var port = uri.Port > 0 ? uri.Port : defaultPort;
 
-        SanabiLogger.LogInfo($"Processing TCP: Host {uri.Host}, Port {port}, Realport {uri.Port}, IP {ip}, Address {address}");
-        using var tcpClient = new TcpClient(ip.AddressFamily);
+        SanabiLogger.LogInfo($"Processing TCP: Host {uri.Host}, Port {port}, Realport {uri.Port}, IP {ip}, Address {uri.Host}");
+        using var tcpClient = new TcpClient(ip.AddressFamily) { NoDelay = true };
         using var cancellationSource = new CancellationTokenSource(PingTimeout);
 
         var startTimestamp = Stopwatch.GetTimestamp();
 
         try
         {
-            await tcpClient.ConnectAsync(ip, port).WaitAsync(cancellationSource.Token);
+            await tcpClient.ConnectAsync(ip, port);//.WaitAsync(cancellationSource.Token);
             return (true, TimeSpan.FromSeconds((double)(Stopwatch.GetTimestamp() - startTimestamp) / Stopwatch.Frequency));
         }
         catch (Exception) when (cancellationSource.IsCancellationRequested)
         {
-            SanabiLogger.LogInfo($"TCP timed out! Host {uri.Host}, Port {port}, Realport {uri.Port}, IP {ip}, Address {address}");
+            SanabiLogger.LogInfo($"TCP timed out! Host {uri.Host}, Port {port}, Realport {uri.Port}, IP {ip}, Address {uri.Host}");
             return (false, null);
         }
     }

@@ -1,8 +1,11 @@
 using System;
-using System.Net;
+using System.Net.NetworkInformation;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
+using Mono.Unix.Native;
+using Sanabi.Framework.Data;
+using Sanabi.Framework.Misc.Net;
 
 namespace SS14.Launcher.Models.ServerStatus;
 
@@ -31,45 +34,98 @@ public sealed class ServerStatusData : ObservableObject, IServerStatusData
         HubAddress = hubAddress;
     }
 
-    public async Task UpdateTrueIp()
+    public async Task UpdateMiscData()
+    {
+        TrueAddress = "Fetching…";
+
+        // Update IP
+        var uri = await UpdateTrueIp();
+        MiscDataUpdateCallback?.Invoke();
+
+        if (!LazySanabiConfig.PingServers)
+        {
+            DisplayedPing = "N/A [pinging disabled]";
+
+            MiscDataUpdateCallback?.Invoke();
+            return;
+        }
+
+        // Update ping
+        if (uri != null)
+        {
+            const int maxAttempts = 5;
+            var lastStatus = IPStatus.Unknown;
+
+            var successfulAttempts = 0;
+            var totalSuccessfulMilliseconds = 0;
+
+            DisplayedPing = "Fetching…";
+            MiscDataUpdateCallback?.Invoke();
+
+            for (var failedAttempts = 0; failedAttempts < maxAttempts; failedAttempts++)
+            {
+                // This could definitely use averaging out the ping over multiple attempts
+                var (newStatus, timeSpent) = await TryPing(uri);
+                lastStatus = newStatus;
+
+                if (lastStatus == IPStatus.Success)
+                {
+                    successfulAttempts++;
+                    totalSuccessfulMilliseconds += timeSpent;
+
+                    continue;
+                }
+            }
+
+            if (successfulAttempts == 0)
+                DisplayedPing = $"ERR [IPStatus: {lastStatus}] [server does not support ICMP pings or you have no Internet access]";
+            else
+                DisplayedPing = $"avg. {totalSuccessfulMilliseconds / successfulAttempts}ms [{successfulAttempts}/{maxAttempts} successful attempts]";
+        }
+        else
+            DisplayedPing = "ERR [bad URI]";
+
+        MiscDataUpdateCallback?.Invoke();
+    }
+
+    private async Task<Uri?> UpdateTrueIp()
     {
         // not dns
         if (!Uri.TryCreate(Address, UriKind.Absolute, out var uri))
-            return;
-
-        TrueAddress = "Fetching…";
-
-        IPAddress[]? trueAddresses = null;
-        using (var linkedToken = new CancellationTokenSource(2500))
-            trueAddresses = await Dns.GetHostAddressesAsync(uri.Host, linkedToken.Token);
-
-        if (trueAddresses == null)
         {
-            TrueAddress = "Unknown (try refreshing)";
-            goto doUpdate;
+            TrueAddress = "ERR [bad URI]";
+            return null;
         }
 
-        if (trueAddresses.Length == 0)
+        if (await NetHelpers.TryParseHostToIp(uri.Host, forgiving: true) is not { } ipAddress)
         {
-            TrueAddress = "N/A";
-            goto doUpdate;
+            TrueAddress = "ERR [couldn't get host IP]";
+            return uri;
         }
 
         if (uri.Port == -1)
-            TrueAddress = $"{trueAddresses[0]}:{Global.DefaultServerPort} [unspecified port; defaulting to {Global.DefaultServerPort}]";
+            TrueAddress = $"{ipAddress}:{Global.DefaultServerPort} [unspecified port; defaulting to {Global.DefaultServerPort}]";
         else
-            TrueAddress = $"{trueAddresses[0]}:{uri.Port}";
+            TrueAddress = $"{ipAddress}:{uri.Port}";
 
         TrueAddressResolved = true;
-
-    doUpdate:
-        TrueAddressUpdateCallback?.Invoke();
-        return;
+        return uri;
     }
 
-    public Action? TrueAddressUpdateCallback = null;
+    private async Task<(IPStatus, int)> TryPing(Uri uri)
+    {
+        var (icmpPingSuccess, icmpRoundTripTime, status) = await NetHelpers.TryPingIcmpAsync(uri);
+
+        if (!icmpPingSuccess)
+            return (status, 0);
+
+        return (status, icmpRoundTripTime!.Value.Milliseconds);
+    }
+
+    public Action? MiscDataUpdateCallback = null;
     public bool TrueAddressResolved = false;
     public string TrueAddress = "Fetching…"; // Actual IP, where Address can just point to a site, this points to the host. Resolved when fetching server status
+    public string DisplayedPing = "Fetching…";
     public string Address { get; }
     public string? HubAddress { get; }
 

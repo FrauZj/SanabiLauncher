@@ -120,10 +120,16 @@
                              Text="{Binding ViewedAddress}"/>
 
         <SelectableTextBlock DockPanel.Dock="Top"
-                             Margin="4,0,2,2"
+                             Margin="4,0,0,0"
                              TextWrapping="Wrap"
                              Foreground="{DynamicResource ThemeSubTextBrush}"
                              Text="{Binding TrueAddress}"/>
+
+        <SelectableTextBlock DockPanel.Dock="Top"
+                             Margin="4,0,0,2"
+                             TextWrapping="Wrap"
+                             Foreground="{DynamicResource ThemeSubTextBrush}"
+                             Text="{Binding DisplayedPing}"/>
 
         <Control DockPanel.Dock="Top"
                  Height="8"/>

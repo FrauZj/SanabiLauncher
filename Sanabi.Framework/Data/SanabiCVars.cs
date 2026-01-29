@@ -52,4 +52,10 @@ public static partial class SanabiCVars
     ///         the user to have it manually listed as a hub.
     /// </summary>
     public static readonly CVarDef<bool> EnableStockHub = CVarDef.Create("EnableStockHub", true);
+
+    /// <summary>
+    ///     Should server ping be determined when opening their dropdown? Some ABSOLUTELY 'SESSED servers might use
+    ///         this to detect you.
+    /// </summary>
+    public static readonly CVarDef<bool> PingServers = CVarDef.Create("PingServers", true);
 }
