@@ -55,7 +55,7 @@ public static partial class SanabiCVars
 
     /// <summary>
     ///     Should server ping be determined when opening their dropdown? Some ABSOLUTELY 'SESSED servers might use
-    ///         this to detect you.
+    ///         this to detect you using sanabilauncher
     /// </summary>
     public static readonly CVarDef<bool> PingServers = CVarDef.Create("PingServers", true);
 }

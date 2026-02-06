@@ -1,7 +1,7 @@
 namespace Sanabi.Framework.Data;
 
 /// <summary>
-///     Lazy way of transferring data.
+///     Lazy way of transferring data in same process.
 /// </summary>
 public static class LazySanabiConfig
 {
