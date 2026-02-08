@@ -21,18 +21,27 @@ Features include:
   - Options to disable aforementioned launcher fingerprint
 
 Info for mod development:
+- Standalone DLLs loaded into the game
+- - Simply a `.dll` added to the mods folder
+  - Only loads a mod assembly into the game
+- Mod with resources and DLL loaded into the game
+- - Folder with
+  - - `.dll` inside, being the loaded assembly
+    - Folder named `Resources` inside, being the resources mounted to the game
+
+Info for mod-ASSEMBLY development:
 - Entrypoint
 - - You must have a static class with no namespace in your main assembly. This is your entry-point class.
-  - The entry class must have one of the following names, otherwise it won't be recognised:
-  - - PatchEntry
+- The entry class must have one of the following names, otherwise it won't be recognised:
+- - PatchEntry
     - ModEntry
     - MarseyEntry
-  - The loader recognises two different optional main entry-point methods on the entry class:
-  - - 1. Static method named `Entry` that takes a parameter of type `Dictionary<string, Assembly>`; this dictionary will be populated with every loaded game-assembly known by the launcher thus far, with the string being the assembly's name. This will normally include:
+- The loader recognises two different optional main entry-point methods on the entry class:
+- - 1. Static method named `Entry` that takes a parameter of type `Dictionary<string, Assembly>`; this dictionary will be populated with every loaded game-assembly known by the launcher thus far, with the string being the assembly's name. This will normally include:
     - - - Content.Client
         - Content.Shared
         - Robust.Client
         - Robust.Shared
     - 2. Static method named `Entry` that takes no parameters
-  - The loader recognises one more optional method, that being a static method named `AfterEntitySystemsLoaded` on the entry class that takes no parameters. This method is called immediately after every one of the game's `EntitySystem`s have finished loading. This is necessary as you can't resolve any entity systems before this point, otherwise an exception is thrown.
+- The loader recognises one more optional method, that being a static method named `AfterEntitySystemsLoaded` on the entry class that takes no parameters. This method is called immediately after every one of the game's `EntitySystem`s have finished loading. This is necessary as you can't resolve any entity systems before this point, otherwise an exception is thrown.
 - The mod assembly is loaded like any other game assembly.

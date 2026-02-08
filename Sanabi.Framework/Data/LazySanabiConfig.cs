@@ -5,6 +5,10 @@ namespace Sanabi.Framework.Data;
 /// </summary>
 public static class LazySanabiConfig
 {
+    // For launcher process
     /// <inheritdoc cref="SanabiCVars.PingServers"/>
     public static bool PingServers = true;
+
+    // For loader/game process
+    public static string RobustClientExecutable = string.Empty;
 }

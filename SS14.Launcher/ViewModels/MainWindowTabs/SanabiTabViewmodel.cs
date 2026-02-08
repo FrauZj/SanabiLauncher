@@ -1,4 +1,3 @@
-using System.IO;
 using Splat;
 using SS14.Launcher.Models.Data;
 using SS14.Launcher.Utility;
@@ -31,15 +30,15 @@ public class SanabiTabViewModel : MainWindowTabViewModel
     {
         PatchList.Clear();
 
-        if (!AssemblyLoadingManager.TryGetExternalDlls(out var externalDlls))
+        if (!AssemblyLoadingManager.TryGetExternalMods(out var externalMods))
             return;
 
         var index = 0;
         var originalMap = Cfg.GetCVar(SanabiCVars.LoadedExternalModsFlags);
 
-        foreach (var dll in externalDlls)
+        foreach (var mod in externalMods)
         {
-            var patchVm = new LoadedPatchViewmodel(this, Path.GetFileName(dll), index);
+            var patchVm = new LoadedPatchViewmodel(this, mod.Name, index);
             patchVm.SetEnabled(AssemblyLoadingManager.GetIsModEnabled(originalMap, index), originalMap);
 
             index++;

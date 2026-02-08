@@ -28,6 +28,33 @@ public static partial class PatchHelpers
         return false;
     }
 
+    /// <summary>
+    ///     Takes constructor parameter-types and parameters and invokes them
+    ///         to create an instance of the thing being constructed.
+    ///
+    ///      Assumes the constructor exists, otherwise throws.
+    ///         This variant tries to get the type from it's fully qualified name.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static dynamic GetConstructorAndMakeInstance(string fullyQualifiedTypeName, Type[] parameterTypes, object?[]? parameters)
+    {
+        var type = ReflectionManager.GetTypeByQualifiedName(fullyQualifiedTypeName);
+        return GetConstructorAndMakeInstance(type, parameterTypes, parameters);
+    }
+
+    /// <summary>
+    ///     Takes constructor parameter-types and parameters and invokes them
+    ///         to create an instance of the thing being constructed.
+    ///
+    ///      Assumes the constructor exists, otherwise throws.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public static dynamic GetConstructorAndMakeInstance(Type type, Type[] parameterTypes, object?[]? parameters)
+    {
+        var constructorInfo = type.GetConstructor(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.DeclaredOnly, parameterTypes);
+        return constructorInfo!.Invoke(parameters);
+    }
+
     [MethodImpl(MethodImplOptions.NoInlining)]
     public static MethodInfo? GetMethod(Type? type, string methodName, Type[]? parameters = null)
     {

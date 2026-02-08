@@ -222,6 +222,7 @@ internal class Program
         Console.WriteLine($"Starting loader");
 
         var robustPath = args[0];
+        LazySanabiConfig.RobustClientExecutable = robustPath;
         var sig = Convert.FromHexString(args[1]);
         var keyPath = args[2];
 
