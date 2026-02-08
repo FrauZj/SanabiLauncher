@@ -26,10 +26,10 @@ Info for mod development:
   - Only loads a mod assembly into the game
 - Mod with resources and DLL loaded into the game
 - - Folder with
-  - - `.dll` inside, being the loaded assembly
+  - - optional `.dll` inside, being the loaded assembly, this is not required so if not found then nothing will happen
     - Folder named `Resources` inside, being the resources mounted to the game
 
-Info for mod-ASSEMBLY development:
+Info for mod-ASSEMBLY (mods with `.dll`s) development:
 - Entrypoint
 - - You must have a static class with no namespace in your main assembly. This is your entry-point class.
 - The entry class must have one of the following names, otherwise it won't be recognised:

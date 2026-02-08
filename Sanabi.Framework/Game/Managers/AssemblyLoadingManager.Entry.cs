@@ -44,10 +44,8 @@ public static partial class AssemblyLoadingManager
         //var index = 0;
         while (_dataPendingAssemblyLoad.TryDequeue(out var modData))
         {
-            //if (!GetIsModEnabled(SanabiConfig.ProcessConfig.LoadedExternalModsFlags, index++))
-            //    continue;
-
-            LoadModAssemblyIntoGame(ref __instance, modData);
+            if (modData.Assembly != null)
+                LoadModAssemblyIntoGame(ref __instance, modData);
         }
     }
 
@@ -88,12 +86,12 @@ public static partial class AssemblyLoadingManager
 
     private static void LoadModAssemblyIntoGame(ref dynamic modLoader, ILoadedModData modData)
     {
-        AssemblyHidingManager.HideAssembly(modData.Assembly);
-        PortModMarseyLogger(modData.Assembly);
+        AssemblyHidingManager.HideAssembly(modData.Assembly!);
+        PortModMarseyLogger(modData.Assembly!);
 
-        _modInitMethod.Invoke(modLoader, (Assembly[])[modData.Assembly]);
+        _modInitMethod.Invoke(modLoader, (Assembly[])[modData.Assembly!]);
 
-        if (GetModAssemblyEntryType(modData.Assembly) is { } modEntryType)
+        if (GetModAssemblyEntryType(modData.Assembly!) is { } modEntryType)
         {
             if (modEntryType?.GetMethod("Entry", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public) is { } modEntryMethod)
                 Enter(modEntryMethod, async: false); // Non-async makes it possible to print logs properly

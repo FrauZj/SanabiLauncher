@@ -91,7 +91,10 @@ public static partial class AssemblyLoadingManager
 
             SanabiLogger.LogInfo($"Loaded mod {module.Name}");
 
-            module.Assembly = Assembly.LoadFrom(module.GetDllFullPath());
+            // if dll is present, load it
+            if (module.DllFullName != string.Empty)
+                module.Assembly = Assembly.LoadFrom(module.GetDllFullPath());
+
             _dataPendingAssemblyLoad.Enqueue(module);
 
             if (module is LoadedFolderData folderModData)
@@ -148,13 +151,14 @@ public static partial class AssemblyLoadingManager
                         break;
                 }
 
-                if (dllPath == null || resourcesPath == null)
+                // only resourcesPath is necessary
+                if (resourcesPath == null)
                 {
-                    SanabiLogger.LogError($"Couldn't resolve dllPath [{dllPath ?? "N/A"}] and/or resourcesPath [{resourcesPath ?? "N/A"}] on a folder! Path: {modPath}");
+                    SanabiLogger.LogError($"Couldn't resolve resourcesPath [{resourcesPath ?? "N/A"}] on a folder! Path: {modPath}");
                     continue;
                 }
 
-                externalMods.Add(new LoadedFolderData(new DirectoryInfo(modPath).Name, Path.GetFileName(dllPath), modPath, null!));
+                externalMods.Add(new LoadedFolderData(new DirectoryInfo(modPath).Name, string.Empty, modPath, null));
             }
             else // Path points to file
             {
@@ -164,7 +168,7 @@ public static partial class AssemblyLoadingManager
                     continue;
                 }
 
-                externalMods.Add(new LoadedDllData(new DirectoryInfo(modPath).Name, Path.GetFileName(modPath), modPath, null!));
+                externalMods.Add(new LoadedDllData(new DirectoryInfo(modPath).Name, Path.GetFileName(modPath), modPath, null! /* not loaded yet */));
             }
         }
 
@@ -184,6 +188,7 @@ public interface ILoadedModData
 
     /// <summary>
     ///     Name of the loaded DLL, with file-extension. Uses system-format paths.
+    ///         For mods that load by folders, this will be empty if there is no DLL.
     /// </summary>
     public string DllFullName { get; set; }
 
@@ -193,9 +198,9 @@ public interface ILoadedModData
     public string ModPath { get; set; }
 
     /// <summary>
-    ///     Mod assembly. Null if main patch wasn't done yet.
+    ///     Mod assembly.
     /// </summary>
-    public Assembly Assembly { get; set; }
+    public Assembly? Assembly { get; set; }
 
     public string GetDllFullPath();
 }
@@ -212,7 +217,10 @@ public sealed class LoadedDllData(string name, string dllFullName, string modPat
 
     public string ModPath { get; set; } = modPath;
 
-    public Assembly Assembly { get; set; } = assembly;
+    /// <summary>
+    ///     Mod assembly. For purely DLLmods, will never be null.
+    /// </summary>
+    public Assembly? Assembly { get; set; } = assembly;
 
     public string GetDllFullPath() => ModPath;
 }
@@ -220,12 +228,12 @@ public sealed class LoadedDllData(string name, string dllFullName, string modPat
 /// <summary>
 ///     For mods that are folders with:
 ///     - loaded resources
-///     - and loaded .DLL
+///     - OPTIONALLY, a loaded `.dll`.
 ///
 ///     <see cref="ModPath"/> would be path to the folder containing
-///         resources folder and the `.dll`.
+///         resources folder and the `.dll` (if it's there).
 /// </summary>
-public sealed class LoadedFolderData(string name, string dllFullName, string modPath, Assembly assembly) : ILoadedModData
+public sealed class LoadedFolderData(string name, string dllFullName, string modPath, Assembly? assembly) : ILoadedModData
 {
     public string Name { get; set; } = name;
 
@@ -233,7 +241,10 @@ public sealed class LoadedFolderData(string name, string dllFullName, string mod
 
     public string ModPath { get; set; } = modPath;
 
-    public Assembly Assembly { get; set; } = assembly;
+    /// <summary>
+    ///     Mod assembly. For resourcemods, may be null.
+    /// </summary>
+    public Assembly? Assembly { get; set; } = assembly;
 
     public string GetDllFullPath() => Path.Join(ModPath, DllFullName);
 
