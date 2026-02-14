@@ -28,7 +28,7 @@ public partial class MainWindow : Window
         AddHandler(DragDrop.DragOverEvent, DragOver);
         AddHandler(DragDrop.DropEvent, Drop);
 
-        _content = (MainWindowContent) Content!;
+        _content = (MainWindowContent)Content!;
 
         ReloadTitle();
     }
@@ -60,6 +60,7 @@ public partial class MainWindow : Window
         }
 
         base.OnDataContextChanged(e);
+        _viewModel?.SetFancyBackground();
     }
 
     private unsafe void DarkMode()
@@ -76,7 +77,7 @@ public partial class MainWindow : Window
         var hWnd = (HWND)handle.Handle;
 
         COLORREF r = 0x00262121;
-        TerraFX.Interop.Windows.Windows.DwmSetWindowAttribute(hWnd, 35, &r, (uint) sizeof(COLORREF));
+        TerraFX.Interop.Windows.Windows.DwmSetWindowAttribute(hWnd, 35, &r, (uint)sizeof(COLORREF));
 
         // Removes the top margin of the window on Windows 11, since there's ample space after we recolor the title bar.
         Classes.Add("WindowsTitlebarColorActive");

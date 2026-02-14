@@ -23,6 +23,8 @@ namespace SS14.Launcher;
 
 public class App : Application
 {
+    public static MainWindowViewModel? MainWindowViewModel = null;
+
     private static readonly Dictionary<string, AssetDef> AssetDefs = new()
     {
         ["WindowIcon"] = new AssetDef("EVL.ico", AssetType.WindowIcon),
@@ -129,12 +131,12 @@ public class App : Application
         loc.Initialize();
         contentManager.Initialize();
 
-        var viewModel = new MainWindowViewModel();
-        viewModel.InitialiseModel();
+        MainWindowViewModel = new MainWindowViewModel();
+        MainWindowViewModel.InitialiseModel();
 
         var window = new MainWindow
         {
-            DataContext = viewModel
+            DataContext = MainWindowViewModel
         };
 
         loc.LanguageSwitched += () =>
@@ -145,7 +147,7 @@ public class App : Application
             GC.Collect();
         };
 
-        var lc = new LauncherCommands(viewModel);
+        var lc = new LauncherCommands(MainWindowViewModel);
         lc.RunCommandTask();
         Locator.CurrentMutable.RegisterConstant(lc);
         msgr.StartServerTask(lc);

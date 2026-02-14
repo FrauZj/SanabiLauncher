@@ -7,46 +7,73 @@
              xmlns:v="clr-namespace:SS14.Launcher.Views"
              xmlns:mwt="clr-namespace:SS14.Launcher.Views.MainWindowTabs"
              xmlns:style="clr-namespace:Avalonia.Styling;assembly=Avalonia.Base"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             mc:Ignorable="d"
+    d:DesignWidth="800"
+    d:DesignHeight="450"
              x:Class="SS14.Launcher.Views.MainWindowTabs.HomePageView">
   <Design.DataContext>
-    <mainWindowTabs:HomePageViewModel />
+    <mainWindowTabs:HomePageViewModel/>
   </Design.DataContext>
 
   <DockPanel>
     <!-- Footer controls -->
-    <DockPanel DockPanel.Dock="Bottom" LastChildFill="False" Margin="4 4 4 0" Height="32">
-      <Button DockPanel.Dock="Left" Classes="OpenRight"
+    <DockPanel DockPanel.Dock="Bottom"
+        LastChildFill="False"
+        Margin="4 4 4 0"
+        Height="32">
+      <Button DockPanel.Dock="Left"
+          Classes="OpenRight"
               Content="{loc:Loc tab-home-direct-connect}"
-              Command="{Binding DirectConnectPressed}" />
-      
+              Command="{Binding DirectConnectPressed}"/>
+
       <!-- replay button; yes, this is kinda evil -->
-      <Button IsVisible="{Binding !FavoritesEmpty}" DockPanel.Dock="Left" Classes="OpenLeft"
+      <Button IsVisible="{Binding !FavoritesEmpty}"
+          DockPanel.Dock="Left"
+          Classes="OpenLeft"
               Content="{loc:Loc tab-home-run-content-bundle}"
-              Click="OpenReplayClicked" />
-      <Button IsVisible="{Binding FavoritesEmpty}" DockPanel.Dock="Left" Classes="OpenBoth"
+              Click="OpenReplayClicked"/>
+      <Button IsVisible="{Binding FavoritesEmpty}"
+          DockPanel.Dock="Left"
+          Classes="OpenBoth"
               Content="{loc:Loc tab-home-run-content-bundle}"
-              Click="OpenReplayClicked" />
+              Click="OpenReplayClicked"/>
 
-      <Button DockPanel.Dock="Left" IsVisible="{Binding FavoritesEmpty}" Classes="OpenLeft" Content="{loc:Loc tab-home-go-to-servers-tab}"
-              Command="{Binding MainWindowViewModel.SelectTabServers}" />
+      <Button DockPanel.Dock="Left"
+          IsVisible="{Binding FavoritesEmpty}"
+          Classes="OpenLeft"
+          Content="{loc:Loc tab-home-go-to-servers-tab}"
+              Command="{Binding MainWindowViewModel.SelectTabServers}"/>
 
-      <Button DockPanel.Dock="Right" Classes="OpenLeft" Command="{Binding AddFavoritePressed}"
+      <Button DockPanel.Dock="Right"
+          Classes="OpenLeft"
+          Command="{Binding AddFavoritePressed}"
               ToolTip.Tip="{loc:Loc tab-home-add-favorite}">
-        <v:IconLabel Icon="{DynamicResource ButtonIcon-plus}" Height="20" Width="20" />
+        <v:IconLabel Icon="{DynamicResource ButtonIcon-plus}"
+            Height="20"
+            Width="20"/>
       </Button>
       <!-- TODO: Fix icon being cut off -->
-      <Button DockPanel.Dock="Right" Classes="OpenBoth" Command="{Binding ToggleFavoritesListVisible}" IsVisible="{Binding !FavoritesEmpty}">
-        <v:IconLabel Icon="{DynamicResource ButtonIcon-vv}" Height="20" Width="20" /> 
+      <Button DockPanel.Dock="Right"
+          Classes="OpenBoth"
+          Command="{Binding ToggleFavoritesListVisible}"
+          IsVisible="{Binding !FavoritesEmpty}">
+        <v:IconLabel Icon="{DynamicResource ButtonIcon-vv}"
+            Height="20"
+            Width="20"/>
       </Button>
-      <Button DockPanel.Dock="Right" Classes="OpenRight" Command="{Binding RefreshPressed}" IsEnabled="{Binding !FavoritesEmpty}"
+      <Button DockPanel.Dock="Right"
+          Classes="OpenRight"
+          Command="{Binding RefreshPressed}"
+          IsEnabled="{Binding !FavoritesEmpty}"
               ToolTip.Tip="{loc:Loc tab-home-refresh}">
-        <v:IconLabel Icon="{DynamicResource ButtonIcon-refresh}" Height="20" Width="20" />
+        <v:IconLabel Icon="{DynamicResource ButtonIcon-refresh}"
+            Height="20"
+            Width="20"/>
       </Button>
     </DockPanel>
 
     <Panel IsVisible="{Binding FavoritesListVisible}">
-      <mwt:ServerList List="{Binding Favorites}" />
+      <mwt:ServerList List="{Binding Favorites}"/>
     </Panel>
   </DockPanel>
 </UserControl>

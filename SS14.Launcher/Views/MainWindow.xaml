@@ -3,11 +3,21 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:views="clr-namespace:SS14.Launcher.Views"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-        MinWidth="800" MinHeight="500"
-        Width="650" Height="400"
+        xmlns:local="clr-namespace:SS14.Launcher.ViewModels"
+        mc:Ignorable="d"
+        d:DesignWidth="800"
+        d:DesignHeight="450"
+        MinWidth="800"
+        MinHeight="500"
+        Width="650"
+        Height="400"
+        TransparencyLevelHint="{Binding AppWindowTransparency}"
         x:Class="SS14.Launcher.Views.MainWindow"
         Icon="{DynamicResource WindowIcon}"
         DragDrop.AllowDrop="True">
-  <views:MainWindowContent />
+  <views:MainWindowContent/>
+
+  <Window.DataContext>
+    <local:MainWindowViewModel/>
+  </Window.DataContext>
 </Window>

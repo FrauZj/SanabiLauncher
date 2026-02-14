@@ -43,6 +43,11 @@ public static partial class SanabiCVars
     public static readonly CVarDef<bool> StartOnLoginMenu = CVarDef.Create("StartOnLoginMenu", false);
 
     /// <summary>
+    ///     If true, disables transitioning images and homepage will be rendered in acrylic blur.
+    /// </summary>
+    public static readonly CVarDef<bool> FancyBackground = CVarDef.Create("FancyBackground", true); // Geg
+
+    /// <summary>
     ///     In hub settings, do we use the hub(s) that the launcher uses
     ///         as default?
     ///

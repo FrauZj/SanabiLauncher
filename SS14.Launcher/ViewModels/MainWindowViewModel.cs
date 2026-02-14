@@ -6,6 +6,9 @@ using System.Linq;
 using System.Reactive.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
+using Avalonia.Media;
 using Avalonia.Platform.Storage;
 using DynamicData;
 using ReactiveUI;
@@ -60,7 +63,7 @@ public sealed class MainWindowViewModel : ViewModelBase, IErrorOverlayOwner
         tabs.Add(ServersTab);
         //tabs.Add(NewsTab);
         tabs.Add(OptionsTab);
-        tabs.Add(new SanabiTabViewModel());
+        tabs.Add(new SanabiTabViewModel(this));
 #if DEVELOPMENT
         tabs.Add(new DevelopmentTabViewModel());
 #endif
@@ -77,6 +80,29 @@ public sealed class MainWindowViewModel : ViewModelBase, IErrorOverlayOwner
 
         SetLoginMenuShowing(_cfg.GetCVar(SanabiCVars.StartOnLoginMenu));
     }
+
+    [Reactive] public bool FancyBackgroundEnabled { get; set; }
+    public void SetFancyBackground(bool? val = null)
+    {
+        val ??= _cfg.GetCVar(SanabiCVars.FancyBackground);
+        FancyBackgroundEnabled = val.Value;
+
+        if (val.Value)
+        {
+            Control?.SetValue(TemplatedControl.BackgroundProperty, Brushes.Transparent);
+            //Control?.SetValue(TopLevel.TransparencyLevelHintProperty, [WindowTransparencyLevel.AcrylicBlur]);
+            AppWindowTransparency = [WindowTransparencyLevel.AcrylicBlur];
+
+            return;
+        }
+
+        Control?.ClearValue(TemplatedControl.BackgroundProperty); // Window d
+        //Control?.SetValue(TopLevel.TransparencyLevelHintProperty, [WindowTransparencyLevel.None]);
+        AppWindowTransparency = [WindowTransparencyLevel.None];
+    }
+
+    [Reactive] public WindowTransparencyLevel[] AppWindowTransparency { get; set; }
+
 
     public void InitialiseModel()
     {
@@ -143,11 +169,11 @@ public sealed class MainWindowViewModel : ViewModelBase, IErrorOverlayOwner
 
     public IReadOnlyList<MainWindowTabViewModel> Tabs { get; }
 
-    private bool _transitioningImagesVisible;
+    private bool _transitioningImagesEnabled;
     public bool TransitioningImagesVisible
     {
-        get => _transitioningImagesVisible;
-        set => this.RaiseAndSetIfChanged(ref _transitioningImagesVisible, value);
+        get => _transitioningImagesEnabled && !FancyBackgroundEnabled;
+        set => this.RaiseAndSetIfChanged(ref _transitioningImagesEnabled, value);
     }
 
     [Reactive] public bool ShowLoginMenu { get; set; }

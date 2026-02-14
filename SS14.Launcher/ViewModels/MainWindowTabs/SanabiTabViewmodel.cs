@@ -17,8 +17,12 @@ public class SanabiTabViewModel : MainWindowTabViewModel
 
     public ObservableCollection<LoadedPatchViewmodel> PatchList { get; set; } = new();
 
-    public SanabiTabViewModel()
+    public MainWindowViewModel MainWindowViewModel;
+
+    public SanabiTabViewModel(MainWindowViewModel mainWindowViewModel)
     {
+        MainWindowViewModel = mainWindowViewModel;
+
         Cfg = Locator.Current.GetRequiredService<DataManager>();
         RefreshMods();
 
@@ -158,6 +162,18 @@ public class SanabiTabViewModel : MainWindowTabViewModel
             Cfg.CommitConfig();
 
             LazySanabiConfig.PingServers = value;
+        }
+    }
+
+    public bool FancyBackground
+    {
+        get => Cfg.GetCVar(SanabiCVars.FancyBackground);
+        set
+        {
+            Cfg.SetCVar(SanabiCVars.FancyBackground, value);
+            Cfg.CommitConfig();
+
+            MainWindowViewModel.SetFancyBackground(value);
         }
     }
 
