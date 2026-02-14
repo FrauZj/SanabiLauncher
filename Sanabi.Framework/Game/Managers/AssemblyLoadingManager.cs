@@ -75,7 +75,6 @@ public static partial class AssemblyLoadingManager
             ModLoaderPostfix,
             HarmonyPatchType.Postfix
         );
-        // public bool TryGetFile(ResPath relPath, [NotNullWhen(true)] out Stream? stream)
 
         if (!TryGetExternalMods(out var modules))
             return;
@@ -318,8 +317,8 @@ public class LoadedPackData(string name, string dataPath) : ILoadedModAndResourc
         SanabiLogger.LogInfo($"[ZIPLOADING] Extracting zip of name `{Name}` to `{ExtractedZipPath}`");
         var sw = Stopwatch.StartNew();
 
-        var zipArchive = ZipFile.Open(DataPath, ZipArchiveMode.Read);
-        zipArchive.ExtractToDirectory(ExtractedZipPath);
+        var safeExtractor = new SafeZipExtractor();
+        _ = safeExtractor.ExtractSafelyAsync(DataPath, ExtractedZipPath);
 
         SanabiLogger.LogInfo($"[ZIPLOADING] Extracted zip of name `{Name}` to `{ExtractedZipPath}`. Elapsed time: {sw.ElapsedMilliseconds}ms");
     }
