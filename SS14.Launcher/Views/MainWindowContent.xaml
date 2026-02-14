@@ -16,12 +16,6 @@
   </Design.DataContext>
 
   <Panel>
-    <Border Background="#80000000"
-            DataContext="{Binding HomeTab}"
-            IsVisible="{Binding FavoritesListVisible}"
-            IsHitTestVisible="False">
-    </Border>
-
     <Grid IsVisible="{Binding TransitioningImagesVisible}"
           x:Name="ImageTransitionGrid">
       <TransitioningContentControl x:Name="ImageTransition"
@@ -30,6 +24,12 @@
                                    HorizontalContentAlignment="Center"
                                    VerticalContentAlignment="Stretch"/>
     </Grid>
+
+    <Border Background="#80000000"
+            DataContext="{Binding HomeTab}"
+            IsVisible="{Binding FavoritesListVisible}"
+            IsHitTestVisible="False">
+    </Border>
 
     <DockPanel LastChildFill="true">
       <!-- Header -->

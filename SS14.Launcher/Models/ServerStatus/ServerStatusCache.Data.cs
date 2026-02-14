@@ -36,7 +36,7 @@ public sealed class ServerStatusData : ObservableObject, IServerStatusData
 
     public async Task UpdateMiscData()
     {
-        TrueAddress = "Fetching…";
+        TrueAddress = "Fetching ping…";
 
         // Update IP
         var uri = await UpdateTrueIp();
@@ -44,7 +44,7 @@ public sealed class ServerStatusData : ObservableObject, IServerStatusData
 
         if (!LazySanabiConfig.PingServers)
         {
-            DisplayedPing = "N/A [pinging disabled]";
+            _baseDisplayedPing = "N/A [pinging disabled]";
 
             MiscDataUpdateCallback?.Invoke();
             return;
@@ -58,7 +58,7 @@ public sealed class ServerStatusData : ObservableObject, IServerStatusData
             var successfulAttempts = 0;
             var totalSuccessfulMilliseconds = 0;
 
-            DisplayedPing = "Fetching…";
+            _baseDisplayedPing = "Fetching ping…";
             MiscDataUpdateCallback?.Invoke();
 
             for (var failedAttempts = 0; failedAttempts < SanabiGlobal.MaximumPingQueryAttempts; failedAttempts++)
@@ -79,12 +79,12 @@ public sealed class ServerStatusData : ObservableObject, IServerStatusData
             }
 
             if (successfulAttempts < SanabiGlobal.MinimumSuccessfulPingQueryAttempts)
-                DisplayedPing = $"ERR [IPStatus: {lastStatus}] [{successfulAttempts} pings succeeded, but at least {SanabiGlobal.MinimumSuccessfulPingQueryAttempts} successful pings were required]";
+                _baseDisplayedPing = $"ERR [IPStatus: {lastStatus}] [{successfulAttempts} pings succeeded, but at least {SanabiGlobal.MinimumSuccessfulPingQueryAttempts} successful pings were required]";
             else
-                DisplayedPing = $"avg. {totalSuccessfulMilliseconds / successfulAttempts}ms [{successfulAttempts}/{SanabiGlobal.MaximumPingQueryAttempts} successful pings]";
+                _baseDisplayedPing = $"avg. {totalSuccessfulMilliseconds / successfulAttempts}ms [{successfulAttempts}/{SanabiGlobal.MaximumPingQueryAttempts} successful pings]";
         }
         else
-            DisplayedPing = "ERR [bad URI]";
+            _baseDisplayedPing = "ERR [bad URI]";
 
         MiscDataUpdateCallback?.Invoke();
     }
@@ -125,8 +125,14 @@ public sealed class ServerStatusData : ObservableObject, IServerStatusData
 
     public Action? MiscDataUpdateCallback = null;
     public bool TrueAddressResolved = false;
-    public string TrueAddress = "Fetching…"; // Actual IP, where Address can just point to a site, this points to the host. Resolved when fetching server status
-    public string DisplayedPing = "Fetching…";
+    public string TrueAddress = "Fetching ping…"; // Actual IP, where Address can just point to a site, this points to the host. Resolved when fetching server status
+
+    private string _baseDisplayedPing = "Fetching ping…";
+    public string DisplayedPing => _baseDisplayedPing +
+        (_status != ServerStatusCode.Online && Status != ServerStatusCode.FetchingStatus ?
+            " [server is reachable by IP, but is unjoinable]" :
+            "");
+
     public string Address { get; }
     public string? HubAddress { get; }
 

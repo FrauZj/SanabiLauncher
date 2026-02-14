@@ -213,10 +213,12 @@ public sealed class ServerEntryViewModel : ObservableRecipient, IRecipient<Favor
 
     private void CheckUpdateInfo()
     {
-        if (!IsExpanded || _cacheData.Status != ServerStatusCode.Online)
+        if (!IsExpanded)
             return;
 
         _ = _cacheData.UpdateMiscData();
+        if (_cacheData.Status != ServerStatusCode.Online)
+            return;
 
         if (_cacheData.StatusInfo is not (ServerStatusInfoCode.NotFetched or ServerStatusInfoCode.Error))
             return;
