@@ -85,28 +85,25 @@ public static partial class AssemblyLoadingManager
         var index = 0;
         foreach (var module in modules)
         {
-            SanabiLogger.LogInfo($"Trying to load mod {module.Name}");
+            SanabiLogger.LogInfo($"Considering to load mod `{module.Name}`");
             if (!GetIsModEnabled(SanabiConfig.ProcessConfig.LoadedExternalModsFlags, index++))
                 continue;
 
-            SanabiLogger.LogInfo($"Loading mod {module.Name}");
+            SanabiLogger.LogInfo($"Loading mod `{module.Name}`");
             module.Initialise();
 
             _dataPendingAssemblyLoad.Enqueue(module);
 
-            if (module is LoadedFolderData folderModData)
+            if (module is ILoadedModAndResourceData modAndResourceDataData)
             {
-                var dirLoader = _dirLoaderConstructorData.Invoke([new DirectoryInfo(folderModData.GetResourcesPath()), _universalLoaderSawmill, false]);
+                var resourcesPath = modAndResourceDataData.GetResourcesPath();
+                if (!Directory.Exists(resourcesPath))
+                    throw new FileNotFoundException($"Couldn't find resources folder at `{resourcesPath}`! Mod name: `{module.Name}`");
+
+                var dirLoader = _dirLoaderConstructorData.Invoke([new DirectoryInfo(resourcesPath), _universalLoaderSawmill, false]);
                 _loadersPendingMount.Enqueue(dirLoader);
 
-                SanabiLogger.LogInfo($"Loaded folder-based mod {module.Name}");
-            }
-            else if (module is LoadedPackData packModData)
-            {
-                var dirLoader = _dirLoaderConstructorData.Invoke([new DirectoryInfo(packModData.GetResourcesPath()), _universalLoaderSawmill, false]);
-                _loadersPendingMount.Enqueue(dirLoader);
-
-                SanabiLogger.LogInfo($"Loaded pack-based mod {module.Name}");
+                SanabiLogger.LogInfo($"Loaded and mounted mod `{module.Name}`, resources at `{resourcesPath}`");
             }
         }
     }
@@ -160,7 +157,7 @@ public static partial class AssemblyLoadingManager
                 // only resourcesPath is necessary
                 if (resourcesPath == null)
                 {
-                    SanabiLogger.LogError($"Couldn't resolve resourcesPath [{resourcesPath ?? "N/A"}] on a folder! Path: {modPath}");
+                    SanabiLogger.LogError($"Couldn't resolve resourcesPath `{resourcesPath ?? "N/A"}` on a folder! Path: {modPath}");
                     continue;
                 }
 
@@ -236,6 +233,16 @@ public sealed class LoadedDllData(string name, string dataPath) : ILoadedModData
 }
 
 /// <summary>
+///     Represents a loaded assembly, with mounted resources.
+///         The assembly `.dll` will share the name of the parent, if applicable.
+/// </summary>
+public interface ILoadedModAndResourceData : ILoadedModData
+{
+    /// <returns>Path to resources folder that will be loaded.</returns>
+    public string GetResourcesPath();
+}
+
+/// <summary>
 ///     For mods that are folders with:
 ///     - loaded resources
 ///     - OPTIONALLY, a loaded `.dll`.
@@ -243,7 +250,7 @@ public sealed class LoadedDllData(string name, string dataPath) : ILoadedModData
 ///     <see cref="ModPath"/> would be path to the folder containing
 ///         resources folder and the `.dll` (if it's there).
 /// </summary>
-public class LoadedFolderData(string name, string dataPath) : ILoadedModData
+public class LoadedFolderData(string name, string dataPath) : ILoadedModAndResourceData
 {
     public string Name { get; set; } = name;
 
@@ -273,7 +280,7 @@ public class LoadedFolderData(string name, string dataPath) : ILoadedModData
 ///     <see cref="ModPath"/> would be path to the zip file containing
 ///         resources folder and the `.dll` (if it's there).
 /// </summary>
-public class LoadedPackData(string name, string dataPath) : ILoadedModData
+public class LoadedPackData(string name, string dataPath) : ILoadedModAndResourceData
 {
     /// <summary>
     ///     SHA256 of the `.zip` file being extracted.

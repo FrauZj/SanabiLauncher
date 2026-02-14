@@ -9,6 +9,7 @@ Features include:
     - Ahelp-menu-popup-disabled patch (todo: fix)
 - - Support for externally-loaded mod assemblies (`.dll`s, see button to open patch directory somewhere in Sanabi tab), can be selectively loaded (maximum of 64 mods in directory)
   - Support for externally-loaded resources
+  - Support for all of that, compressed into a `.zip`
   - Suspicious launcher-related assemblies (e.g. patch assemblies) are hidden from the game
 - Gives you access to tent for camouflage against drones
 - - Account tokens are updated only for individual accounts, and only when they are in use
