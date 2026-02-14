@@ -14,7 +14,7 @@ public sealed class SafeZipExtractor
     private readonly CancellationToken _cancellationToken;
 
     public SafeZipExtractor(
-        long maxTotalBytes = 25 * 1024 * 1024, // 25MB
+        long maxTotalBytes = 15 * 1024 * 1024, // 15MB
         int maxFiles = 650,
         double maxCompressionRatio = 100,
         CancellationToken cancellationToken = default)
