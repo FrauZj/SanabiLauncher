@@ -75,8 +75,15 @@
                   Content="Enable external mods"/>
         <TextBlock VerticalAlignment="Center"
                    TextWrapping="Wrap"
-                   Text="If patching is enabled, do we patch external mods; those that are in the mod's mod directory?"
+                   Text="If patching is enabled, do we patch external mods; those that are in the mod's mod directory? Zip-file mods larger than 25MiB uncompressed will not be extracted fully and will most likely crash the game upon load."
                    Margin="8"/>
+
+        <TextBlock VerticalAlignment="Center"
+                   Foreground="Red"
+                   FontWeight="Bold"
+                   TextWrapping="Wrap"
+                   Text="Loaded external mods are not checked for malware and therefore may pose a risk to your computer; enable external mods at your own risk."
+                   Margin="2"/>
 
         <ScrollViewer DockPanel.Dock="Top">
           <StackPanel Spacing="2">
