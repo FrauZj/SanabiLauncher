@@ -41,7 +41,7 @@ public static class ReflectionManager
     ///     Returns the type from it's fully qualified type-name.
     ///         Throws if not possible. Caches type for future calls if found.
     /// </summary>
-    /// <exception cref="Exception">Thrown if the type didn't exist in the cache and could not be found via <see cref="AssemblyManager"/>.</exception>
+    /// <exception cref="InvalidOperationException">Thrown if the type didn't exist in the cache and could not be found via <see cref="AssemblyManager"/>.</exception>
     /// <inheritdoc cref="TryGetTypeByQualifiedName(string, out Type)"/> // inherit param
     public static Type GetTypeByQualifiedName(string qualifiedTypeName)
     {
@@ -51,7 +51,7 @@ public static class ReflectionManager
         {
             var typePrefixAssembly = ExtractTypePrefix(qualifiedTypeName);
             if (!AssemblyManager.TryGetAssembly(typePrefixAssembly, out var assembly))
-                throw new Exception($"Couldn't locate qualified type \"{qualifiedTypeName}\" in assembly {typePrefixAssembly}!");
+                throw new InvalidOperationException($"Couldn't locate qualified type \"{qualifiedTypeName}\" in assembly {typePrefixAssembly}!");
 
             cachedTypeRef = assembly.GetType(qualifiedTypeName);
         }

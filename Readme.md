@@ -22,13 +22,15 @@ Features include:
   - Options to disable aforementioned launcher fingerprint
 
 Info for mod development:
-- Standalone DLLs loaded into the game
-- - Simply a `.dll` added to the mods folder
-  - Only loads a mod assembly into the game
 - Mod with resources and DLL loaded into the game
 - - Folder with
   - - optional `.dll` inside, being the loaded assembly, this is not required so if not found then nothing will happen
     - Folder named `Resources` inside, being the resources mounted to the game
+- Packed mod with resources and DLL loaded into the game
+- - Exactly the same as the above type of mod, but is its contents compressed into a `.zip`.
+- Standalone DLLs loaded into the game
+- - Simply a `.dll` added to the mods folder
+  - Only loads a mod assembly into the game
 
 Info for mod-ASSEMBLY (mods with `.dll`s) development:
 - Entrypoint
