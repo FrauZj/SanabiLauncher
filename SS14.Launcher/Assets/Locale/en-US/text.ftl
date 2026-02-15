@@ -25,10 +25,9 @@ connecting-cancel = Cancel
 connecting-status-none = Starting connection…
 connecting-status-update-error =
     There was an error while downloading server content. If this persists try some of the following:
+    - Best Solution Sponsored By SanabiLauncher: Enter the 'Options' tab, scroll to the bottom, and click 'Clear installed server content' and 'Clear installed engines'. If you only do one and not both, client will most likely crash silently upon connection with no error message.
     - Try connecting to another game server to see if the problem persists.
     - Try disabling or enabling software such as VPNs, if you have any.
-
-    If you are still having issues, first try contacting the server you are attempting to join before asking for support on the Official Space Station 14 Discord or Forums.
 
     Technical error: { $err }
 connecting-status-update-error-no-engine-for-platform = This game is using an older version that does not support your current platform. Please try another server or try again later.

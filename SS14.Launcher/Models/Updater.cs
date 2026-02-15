@@ -729,7 +729,8 @@ public sealed partial class Updater : ReactiveObject
                 VALUES (@Version, 'Robust', @EngineVersion)",
             new
             {
-                Version = versionId, EngineVersion = engineVersion
+                Version = versionId,
+                EngineVersion = engineVersion
             });
 
         Log.Debug("Inserting dependency: {ModuleName} {ModuleVersion}", "Robust", engineVersion);
