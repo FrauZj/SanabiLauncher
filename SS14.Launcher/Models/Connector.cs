@@ -497,7 +497,7 @@ public partial class Connector : ReactiveObject
                 var apiAddress = UriHelper.GetServerApiAddress(parsedAddress);
 
                 // Infer download URL to be self-hosted client address if not supplied
-                // (The server may not know it's own address)
+                // (The server may  not know it's own address)
                 info.BuildInformation.DownloadUrl = new Uri(apiAddress, "client.zip").ToString();
 
                 if (acz)
