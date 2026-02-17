@@ -210,7 +210,7 @@
                   Content="Randomise ping-query delay"/>
         <TextBlock VerticalAlignment="Center"
                    TextWrapping="Wrap"
-                   Text="When you ping a server, multiple pings are done. There is a delay between those ping queries. When this is off, the delay is uniform (always the same). When this is on, the delay is randomised each time. SOMEONE asked me to code this."
+                   Text="When you ping a server, multiple pings are done. There is a delay between those ping queries. When this is off, the delay is uniform (always the same). When this is on, the delay is randomised each time. SOMEONE asked me to code this. This will give a flat increase to how long it takes to ping a server, usually."
                    Margin="8"/>
 
         <!-- VIS. START -->
