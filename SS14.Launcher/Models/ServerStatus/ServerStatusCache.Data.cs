@@ -129,7 +129,7 @@ public sealed class ServerStatusData : ObservableObject, IServerStatusData
 
     private string _baseDisplayedPing = "Fetching ping…";
     public string DisplayedPing => _baseDisplayedPing +
-        (_status != ServerStatusCode.Online && Status != ServerStatusCode.FetchingStatus ?
+        (LazySanabiConfig.PingServers && _status != ServerStatusCode.Online && Status != ServerStatusCode.FetchingStatus ?
             " [server is reachable by IP, but is unjoinable]" :
             "");
 
