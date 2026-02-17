@@ -29,6 +29,7 @@ Info for mod development:
     - Folder named `Resources` inside, being the resources mounted to the game
 - Packed mod with resources and DLL loaded into the game
 - - Exactly the same as the above type of mod, but is its contents compressed into a `.zip`.
+  - 45MiB size limit
 - Standalone DLLs loaded into the game
 - - Simply a `.dll` added to the mods folder
   - Only loads a mod assembly into the game
