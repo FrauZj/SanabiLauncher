@@ -142,7 +142,7 @@ public sealed class MainWindowViewModel : ViewModelBase, IErrorOverlayOwner
         overrideAssets.Initialize();
 
         BusyTask = _loc.GetString("main-window-busy-checking-update");
-        //await SCRISK_CheckLauncherUpdate();
+        await SCRISK_CheckLauncherUpdate();
 
         BusyTask = null;
     }

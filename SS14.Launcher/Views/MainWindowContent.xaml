@@ -139,7 +139,7 @@
                    Text="{loc:Loc main-window-out-of-date}"/>
         <TextBlock Margin="0, 10"
                    TextAlignment="Center"
-                   Text="{loc:Loc main-window-out-of-date-desc}"/>
+                   Text="A new version of the launcher exists! You may either download it at the given link or tell us to fuck off."/>
         <DockPanel LastChildFill="False">
           <Button DockPanel.Dock="Right"
                   Content="Dismiss"
