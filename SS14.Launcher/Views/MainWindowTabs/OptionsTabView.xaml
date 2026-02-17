@@ -98,23 +98,12 @@ You can put (one or more) images in 'SS14 Data folder -> launcher -> sanabi -> s
                    Text="{loc:Loc tab-options-seasonal-branding-desc}"
                    Margin="8"/>
 
-        <CheckBox VerticalAlignment="Center"
-                  IsVisible="{Binding !HideDisableSigning}"
-                  Margin="4"
-                  IsChecked="{Binding DisableSigning}"
-                  Content="{loc:Loc tab-options-disable-signing}"/>
-        <TextBlock VerticalAlignment="Center"
-                   IsVisible="{Binding !HideDisableSigning}"
-                   TextWrapping="Wrap"
-                   Text="{loc:Loc tab-options-disable-signing-desc}"
-                   Margin="8"/>
-
         <Button Click="OpenHubSettings"
-                Content="{loc:Loc tab-options-hub-settings}"
-                Margin="4"
-                HorizontalAlignment="Left"/>
+            Content="{loc:Loc tab-options-hub-settings}"
+            Margin="4"
+            HorizontalAlignment="Left"/>
         <TextBlock VerticalAlignment="Center"
-                   TextWrapping="Wrap"
+            TextWrapping="Wrap"
                    Text="{loc:Loc tab-options-hub-settings-desc}"
                    Margin="8"/>
 
