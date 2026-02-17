@@ -6,7 +6,7 @@
     <TargetFramework>net10.0-windows</TargetFramework>
     <PublishAot>true</PublishAot>
     <TargetName>SanabiLauncher</TargetName>
-    <ApplicationIcon>../SS14.Launcher/Assets/icon.ico</ApplicationIcon>
+    <ApplicationIcon>../SS14.Launcher/Assets/EVL.ico</ApplicationIcon>
     <LangVersion>12</LangVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 

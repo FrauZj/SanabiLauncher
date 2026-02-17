@@ -129,7 +129,7 @@ buildDotnetModule rec {
     mkdir -p $out/lib/space-station-14-launcher/loader
     cp -r SS14.Loader/bin/${buildType}/*/*/* $out/lib/space-station-14-launcher/loader/
 
-    icoFileToHiColorTheme SS14.Launcher/Assets/icon.ico space-station-14-launcher $out
+    icoFileToHiColorTheme SS14.Launcher/Assets/EVL.ico space-station-14-launcher $out
   '';
 
   meta = with lib; {
