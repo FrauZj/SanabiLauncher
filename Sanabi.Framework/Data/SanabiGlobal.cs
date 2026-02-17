@@ -18,7 +18,6 @@ public static class SanabiGlobal
     public const int MinimumSuccessfulPingQueryAttempts = 3;
 
     // Do not indent
-    // Do not make const
     public const string FallbackLauncherInfoData = """
 {
   "messages": {
