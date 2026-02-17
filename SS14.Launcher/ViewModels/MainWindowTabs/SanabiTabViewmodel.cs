@@ -27,6 +27,7 @@ public class SanabiTabViewModel : MainWindowTabViewModel
         RefreshMods();
 
         LazySanabiConfig.PingServers = Cfg.GetCVar(SanabiCVars.PingServers);
+        LazySanabiConfig.RandomiseServerPingQueryDelay = Cfg.GetCVar(SanabiCVars.RandomiseServerPingQueryDelay);
     }
 
     // Binding; do not rename/remove/change signature
@@ -162,6 +163,18 @@ public class SanabiTabViewModel : MainWindowTabViewModel
             Cfg.CommitConfig();
 
             LazySanabiConfig.PingServers = value;
+        }
+    }
+
+    public bool RandomiseServerPingQueryDelay
+    {
+        get => Cfg.GetCVar(SanabiCVars.RandomiseServerPingQueryDelay);
+        set
+        {
+            Cfg.SetCVar(SanabiCVars.RandomiseServerPingQueryDelay, value);
+            Cfg.CommitConfig();
+
+            LazySanabiConfig.RandomiseServerPingQueryDelay = value;
         }
     }
 

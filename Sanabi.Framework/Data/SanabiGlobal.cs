@@ -34,7 +34,13 @@ public static class SanabiGlobal
 """;
 
     /// <summary>
-    ///     Amount of time to pass between ping queries.
+    ///     Minimum of random amount of time to pass between ping queries.
+    ///         This is used as ping interval when random-ping-delay is disabled.
     /// </summary>
-    public static readonly TimeSpan PingQueryInterval = TimeSpan.FromMilliseconds(50); // 50ms seems to be most successful without taking years
+    public static readonly TimeSpan MinPingQueryInterval = TimeSpan.FromMilliseconds(50); // 50ms seems to be most successful without taking years
+
+    /// <summary>
+    ///     Maximum of random amount of time to pass between ping queries.
+    /// </summary>
+    public static readonly TimeSpan MaxPingQueryInterval = TimeSpan.FromMilliseconds(85);
 }

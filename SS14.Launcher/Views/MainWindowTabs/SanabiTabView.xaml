@@ -204,6 +204,15 @@
                    Text="Should server ping be determined when opening their dropdown? Some ABSOLUTELY 'SESSED servers might use this to detect you. Note that not all servers will support being pinged via ICMP, so most of those which don't accept ICMP pings will usually give TimedOut as the error reason."
                    Margin="8"/>
 
+        <CheckBox VerticalAlignment="Center"
+                  Margin="4"
+                  IsChecked="{Binding RandomiseServerPingQueryDelay}"
+                  Content="Randomise ping-query delay"/>
+        <TextBlock VerticalAlignment="Center"
+                   TextWrapping="Wrap"
+                   Text="When you ping a server, multiple pings are done. There is a delay between those ping queries. When this is off, the delay is uniform (always the same). When this is on, the delay is randomised each time. SOMEONE asked me to code this."
+                   Margin="8"/>
+
         <!-- VIS. START -->
 
         <TextBlock HorizontalAlignment="Center"

@@ -63,4 +63,10 @@ public static partial class SanabiCVars
     ///         this to detect you using sanabilauncher
     /// </summary>
     public static readonly CVarDef<bool> PingServers = CVarDef.Create("PingServers", true);
+
+    /// <summary>
+    ///     When <see cref="PingServers"/> is enabled, do we randomise the delay between pings using
+    ///         the values in SanabiGlobal?
+    /// </summary>
+    public static readonly CVarDef<bool> RandomiseServerPingQueryDelay = CVarDef.Create("RandomiseServerPingQueryDelay", true);
 }

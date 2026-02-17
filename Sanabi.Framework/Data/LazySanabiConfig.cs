@@ -9,6 +9,9 @@ public static class LazySanabiConfig
     /// <inheritdoc cref="SanabiCVars.PingServers"/>
     public static bool PingServers = true;
 
+    /// <inheritdoc cref="SanabiCVars.RandomiseServerPingQueryDelay"/>
+    public static bool RandomiseServerPingQueryDelay = true;
+
     // For loader/game process
     public static string RobustClientExecutable = string.Empty;
 }

@@ -3,7 +3,6 @@ using System.Net.NetworkInformation;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
-using Mono.Unix.Native;
 using Sanabi.Framework.Data;
 using Sanabi.Framework.Misc.Net;
 
@@ -11,6 +10,7 @@ namespace SS14.Launcher.Models.ServerStatus;
 
 public sealed class ServerStatusData : ObservableObject, IServerStatusData
 {
+    private static Random SharedRandom = Random.Shared;
     private string? _name;
     private string? _desc;
     private TimeSpan? _ping;
@@ -63,7 +63,16 @@ public sealed class ServerStatusData : ObservableObject, IServerStatusData
 
             for (var failedAttempts = 0; failedAttempts < SanabiGlobal.MaximumPingQueryAttempts; failedAttempts++)
             {
-                await Task.Delay(SanabiGlobal.PingQueryInterval);
+                if (LazySanabiConfig.RandomiseServerPingQueryDelay)
+                {
+                    var next = SharedRandom.NextDouble();
+                    var minSeconds = SanabiGlobal.MinPingQueryInterval.TotalSeconds;
+                    var maxSeconds = SanabiGlobal.MaxPingQueryInterval.TotalSeconds;
+
+                    await Task.Delay(TimeSpan.FromSeconds(minSeconds + (maxSeconds - minSeconds) * next));
+                }
+                else
+                    await Task.Delay(SanabiGlobal.MinPingQueryInterval);
 
                 // This could definitely use averaging out the ping over multiple attempts
                 var (newStatus, timeSpent) = await TryPing(uri);
