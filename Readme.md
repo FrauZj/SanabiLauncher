@@ -47,6 +47,8 @@ Info for mod-ASSEMBLY (mods with `.dll`s) development:
         - Content.Shared
         - Robust.Client
         - Robust.Shared
-    - 2. Static method named `Entry` that takes no parameters
+    - 2. Static method named `Entry` that takes a parameter of type `string`; this is the disk-path where data for mods will be stored. If you want to use this, you should ensure that a folder for your mod data exists.
+    - 3. Static method named `Entry` that has the parameters of the above two combined, with the first parameter being the assembly-dictionary and second being the path-string.
+    - 4. Static method named `Entry` that takes no parameters
 - The loader recognises one more optional method, that being a static method named `AfterEntitySystemsLoaded` on the entry class that takes no parameters. This method is called immediately after every one of the game's `EntitySystem`s have finished loading. This is necessary as you can't resolve any entity systems before this point, otherwise an exception is thrown.
 - The mod assembly is loaded like any other game assembly.
