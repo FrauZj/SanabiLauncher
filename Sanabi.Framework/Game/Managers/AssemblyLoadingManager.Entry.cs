@@ -1,6 +1,7 @@
 using System.Reflection;
 using Sanabi.Framework.Misc;
 using Sanabi.Framework.Patching;
+using SS14.Launcher;
 
 namespace Sanabi.Framework.Game.Managers;
 
@@ -14,13 +15,50 @@ public static partial class AssemblyLoadingManager
 
     /// <summary>
     ///     Invokes a static method and enters it. The method may
-    ///         have no parameters. If the method has one parameter,
-    ///         whose type is a `Dictionary<string, Assembly?>`, the
-    ///         method will be invoked with <see cref="AssemblyManager.Assemblies"/>
-    ///         as the only parameter.
+    ///         have no parameters.
     /// </summary>
     /// <param name="async">Whether to run the method on another task.</param>
     public static void Enter(MethodInfo entryMethod, bool async = false)
+    {
+        var parameters = entryMethod.GetParameters();
+        object?[]? invokedParameters = null;
+        if (parameters.Length == 1 &&
+            parameters[0].ParameterType == AssemblyManager.Assemblies.GetType())
+            invokedParameters = [AssemblyManager.Assemblies];
+
+        /*
+        when only parameter is string:
+        - give mod data path
+        when only parameter is assemblies dict:
+        - give assemblies dict
+        when first parameter is assemblies dict and second parameter is string:
+        - give assemblies dict
+        - give mod data path
+        */
+
+        if (parameters.Length >= 1)
+        {
+            if (parameters[0].ParameterType == AssemblyManager.Assemblies.GetType())
+            {
+                if (parameters.Length == 2 &&
+                    parameters[1].ParameterType == typeof(string))
+                    invokedParameters = [AssemblyManager.Assemblies, LauncherPaths.SanabiModDataPath];
+                else
+                    invokedParameters = [AssemblyManager.Assemblies];
+            }
+            else if (parameters[0].ParameterType == typeof(string))
+                invokedParameters = [LauncherPaths.SanabiModDataPath];
+        }
+
+        if (async)
+            _ = Task.Run(async () => entryMethod.Invoke(null, invokedParameters));
+        else
+            entryMethod.Invoke(null, invokedParameters);
+
+        Console.WriteLine($"Entered patch at {entryMethod.DeclaringType?.FullName}");
+    }
+
+    public static void EnterDb(MethodInfo entryMethod, bool async = false)
     {
         var parameters = entryMethod.GetParameters();
         object?[]? invokedParameters = null;

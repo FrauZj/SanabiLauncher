@@ -38,6 +38,7 @@ public static class LauncherPaths
     public static readonly string SanabiDirPath = Path.Combine(DirUserData, "sanabi");
     public static readonly string SanabiModsPath = Path.Combine(SanabiDirPath, "mods");
     public static readonly string SanabiExtractedModZipsPath = Path.Combine(SanabiDirPath, "extracted_mod_zips");
+    public static readonly string SanabiModDataPath = Path.Combine(SanabiDirPath, "mod_specific_data");
 
     public static void CreateDirs()
     {
@@ -48,6 +49,7 @@ public static class LauncherPaths
         Ensure(SanabiDirPath);
         Ensure(SanabiModsPath);
         Ensure(SanabiExtractedModZipsPath);
+        Ensure(SanabiModDataPath);
 
         static void Ensure(string path) => Helpers.EnsureDirectoryExists(path);
     }
