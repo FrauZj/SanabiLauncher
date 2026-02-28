@@ -157,6 +157,20 @@ public sealed class ServerStatusData : ObservableObject, IServerStatusData
         set => SetProperty(ref _desc, value);
     }
 
+    private string _mapName = "Undetermined (check status on serverlist)";
+    public string MapName
+    {
+        get => _mapName;
+        set => SetProperty(ref _mapName, value);
+    }
+
+    private string _preset = "Undetermined (check status on serverlist)";
+    public string Preset
+    {
+        get => _preset;
+        set => SetProperty(ref _preset, value);
+    }
+
     /// <summary>
     ///     Round-trip-time between the client and server.
     /// </summary>

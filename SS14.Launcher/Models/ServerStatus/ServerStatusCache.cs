@@ -1,11 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
-using System.Net.Sockets;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -24,10 +22,22 @@ public sealed class ServerStatusCache : IServerSource
     // Yes this class "memory leaks" because it never frees these data objects.
     // Oh well!
     private readonly Dictionary<string, CacheReg> _cachedData = new();
-    private readonly HttpClient _http;
+    public readonly HttpClient _http;
+
+    /// <summary>
+    ///     GEEGG this is a hack to get the instance of this class to the view models without doing some sort of dependency injection or service locator.
+    ///     This is really only needed because the server entry view models need to be able to trigger info updates, and they get created before the home page view model, which is where we request the initial update.
+    ///     So we need to be able to trigger the initial update from the server entry view models, which means we need to be able to get the instance of this class from them, which means we need a static reference to it.
+    ///  At some point in the future we should probably refactor this to be less hacky, but for now this is fine. But really, we should refactor this to be less hacky. Anyway, this is the static instance of the server status cache.
+    /// Did you know that the server entry view models need to be able to trigger info updates? They do! They need to be able to trigger info updates so that when you click on a server, it can fetch the info for that server and display it in the UI. And that's why we need this static instance. It's all connected, you see.
+    /// ONe day, we will refactor this to be less hacky. But for now, this is how we do it. He opened a case after this. Ohnepixel#0001: "Refactor ServerStatusCache to not use a static instance". It's on the roadmap, but it's not a high priority. Anyway, this is the static instance of the server status cache.
+    /// PJB#0001: "I mean, it's not a memory leak if we need all the data to be cached for the entire runtime of the application, right?" Yes, that's true. It's only a memory leak if we have data that we never use and never free. In this case, we do use all the data, and we never free it, but that's intentional. So it's not really a memory leak, it's just a cache that never evicts anything. But yes, it does "leak" in the sense that it grows over time and never shrinks, but that's by design. We want to keep all the data around for the entire runtime of the application because we might need to access it at any time. So it's not really a leak, it's just a cache that never evicts anything. But yes, it does "leak" in the sense that it grows over time and never shrinks, but that's by design. We want to keep all the data around for the entire runtime of the application because we might need to access it at any time.
+    /// </summary>
+    public static ServerStatusCache Instance = null!;
 
     public ServerStatusCache()
     {
+        Instance = this;
         _http = Locator.Current.GetRequiredService<HttpClient>();
     }
 
@@ -128,6 +138,9 @@ public sealed class ServerStatusCache : IServerSource
         data.Name = status.Name;
         data.PlayerCount = Math.Max(0, status.PlayerCount);
         data.SoftMaxPlayerCount = Math.Max(0, status.SoftMaxPlayerCount);
+
+        data.MapName = status.Map ?? "N/A";
+        data.Preset = status.DisplayedPreset ?? "N/A";
 
         switch (status.RunLevel)
         {

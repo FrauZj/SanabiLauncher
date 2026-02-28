@@ -107,11 +107,23 @@
                              TextWrapping="Wrap"/>
 
         <SelectableTextBlock DockPanel.Dock="Top"
-                             Margin="4,0,4,4"
+                             Margin="4,0,0,0"
                              TextWrapping="Wrap"
                              Foreground="{DynamicResource ThemeSubTextBrush}"
                              Text="{Binding FetchedFrom}"
                              IsVisible="{Binding ShowFetchedFrom}"/>
+
+        <SelectableTextBlock DockPanel.Dock="Top"
+                             Margin="4,0,0,0"
+                             TextWrapping="Wrap"
+                             Foreground="{DynamicResource ThemeSubTextBrush}"
+                             Text="{Binding MapName}"/>
+
+        <SelectableTextBlock DockPanel.Dock="Top"
+                             Margin="4,0,4,4"
+                             TextWrapping="Wrap"
+                             Foreground="{DynamicResource ThemeSubTextBrush}"
+                             Text="{Binding DisplayedPreset}"/>
 
         <SelectableTextBlock DockPanel.Dock="Top"
                              Margin="4,0,0,0"

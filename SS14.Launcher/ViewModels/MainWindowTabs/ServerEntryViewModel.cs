@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel;
+using System.Threading;
 using Microsoft.Toolkit.Mvvm.ComponentModel;
 using Microsoft.Toolkit.Mvvm.Messaging;
 using SS14.Launcher.Localization;
@@ -165,6 +166,8 @@ public sealed class ServerEntryViewModel : ObservableRecipient, IRecipient<Favor
     public string ViewedAddress => $"Advertised address: {_cacheData.Address}";
     public string TrueAddress => $"Host address: {_cacheData.TrueAddress}";
     public string DisplayedPing => $"Estimated ping: {_cacheData.DisplayedPing}";
+    public string MapName => $"Map: {_cacheData.MapName}";
+    public string DisplayedPreset => $"Gamemode: {_cacheData.Preset}";
 
     public string? FetchedFrom
     {
