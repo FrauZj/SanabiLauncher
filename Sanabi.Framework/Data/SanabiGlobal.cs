@@ -5,18 +5,18 @@ namespace Sanabi.Framework.Data;
 /// </summary>
 public static class SanabiGlobal
 {
-    /// <summary>
-    ///     Maximum number of queries done when pinging a server.
-    /// </summary>
-    public const int MaximumPingQueryAttempts = 6;
+  /// <summary>
+  ///     Maximum number of queries done when pinging a server.
+  /// </summary>
+  public const int MaximumPingQueryAttempts = 6;
 
-    /// <summary>
-    ///     Minimum number of queries to a server that must be successful.
-    /// </summary>
-    public const int MinimumSuccessfulPingQueryAttempts = 3;
+  /// <summary>
+  ///     Minimum number of queries to a server that must be successful.
+  /// </summary>
+  public const int MinimumSuccessfulPingQueryAttempts = 3;
 
-    // Do not indent
-    public const string FallbackLauncherInfoData = """
+  // Do not indent
+  public const string FallbackLauncherInfoData = """
 {
   "messages": {
     "en-US": [
@@ -24,20 +24,20 @@ public static class SanabiGlobal
     ]
   },
   "allowedVersions": [
-    "SANABI-220-2"
+    "SANABI-220-3"
   ],
   "overrideAssets": {}
 }
 """;
 
-    /// <summary>
-    ///     Minimum of random amount of time to pass between ping queries.
-    ///         This is used as ping interval when random-ping-delay is disabled.
-    /// </summary>
-    public static readonly TimeSpan MinPingQueryInterval = TimeSpan.FromMilliseconds(50); // 50ms seems to be most successful without taking years
+  /// <summary>
+  ///     Minimum of random amount of time to pass between ping queries.
+  ///         This is used as ping interval when random-ping-delay is disabled.
+  /// </summary>
+  public static readonly TimeSpan MinPingQueryInterval = TimeSpan.FromMilliseconds(50); // 50ms seems to be most successful without taking years
 
-    /// <summary>
-    ///     Maximum of random amount of time to pass between ping queries.
-    /// </summary>
-    public static readonly TimeSpan MaxPingQueryInterval = TimeSpan.FromMilliseconds(85);
+  /// <summary>
+  ///     Maximum of random amount of time to pass between ping queries.
+  /// </summary>
+  public static readonly TimeSpan MaxPingQueryInterval = TimeSpan.FromMilliseconds(85);
 }
