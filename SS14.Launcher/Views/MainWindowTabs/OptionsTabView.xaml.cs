@@ -41,7 +41,7 @@ public partial class OptionsTabView : UserControl
         var locMgr = Locator.Current.GetService<LocalizationManager>()!;
 
         await ClearServerContentButton.DisplayDoneMessage(
-            blocked ? locMgr.GetString("tab-options-clear-content-close-client") : null);
+            "You need to restart the launcher now!", duration: int.MaxValue);
     }
 
     private async void OpenHubSettings(object? sender, RoutedEventArgs args)

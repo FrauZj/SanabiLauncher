@@ -1,6 +1,8 @@
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.Threading.Tasks;
+using Sanabi.Framework.Misc;
 using Splat;
 using SS14.Launcher.Localization;
 using SS14.Launcher.Models.ContentManagement;
@@ -67,7 +69,16 @@ public class OptionsTabViewModel : MainWindowTabViewModel
 
     public async Task<bool> ClearServerContent()
     {
-        return await _contentManager.ClearAll();
+        try
+        {
+            File.Delete(LauncherPaths.PathContentDb);
+            return true;
+        }
+        catch (Exception ex)
+        {
+            SanabiLogger.LogError($"Exception caught when trying to annihilate server content via deleting files, falling back to db ops. Ex: {ex}");
+            return await _contentManager.ClearAll();
+        }
     }
 
     public void OpenLogDirectory()
