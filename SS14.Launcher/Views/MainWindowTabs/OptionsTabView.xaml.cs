@@ -1,4 +1,6 @@
 using System;
+using System.Diagnostics;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
@@ -41,7 +43,10 @@ public partial class OptionsTabView : UserControl
         var locMgr = Locator.Current.GetService<LocalizationManager>()!;
 
         await ClearServerContentButton.DisplayDoneMessage(
-            "You need to restart the launcher now!", duration: int.MaxValue);
+            "The launcher will restart now.", duration: 1000);
+
+        Process.Start(Environment.ProcessPath!, Environment.GetCommandLineArgs());
+        Environment.Exit(-1);
     }
 
     private async void OpenHubSettings(object? sender, RoutedEventArgs args)
